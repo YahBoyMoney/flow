@@ -1,26 +1,30 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import Image from "next/image"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { Check, Menu, X, Moon, Sun, ArrowRight, Star, Truck, Shield, Users, Clock, Leaf, Phone } from "lucide-react"
+import { Check, Menu, X, ArrowRight, Truck, Shield, Clock, Leaf, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { useTheme } from "next-themes"
 
-export default function LandingPage() {
+const floatingAnimation = {
+  y: [0, 20, 0],
+  transition: {
+    duration: 4,
+    repeat: Number.POSITIVE_INFINITY,
+    ease: "easeInOut",
+  },
+}
+
+export default function Page() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
+  const [currentDay, setCurrentDay] = useState(0)
   const { scrollYProgress } = useScroll()
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
 
   useEffect(() => {
-    setMounted(true)
     const handleScroll = () => {
       if (window.scrollY > 10) {
         setIsScrolled(true)
@@ -29,13 +33,12 @@ export default function LandingPage() {
       }
     }
 
+    const today = new Date().getDay()
+    setCurrentDay(today)
+
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
 
   const container = {
     hidden: { opacity: 0 },
@@ -52,15 +55,6 @@ export default function LandingPage() {
     show: { opacity: 1, y: 0 },
   }
 
-  const floatingAnimation = {
-    y: [0, -10, 0],
-    transition: {
-      duration: 3,
-      repeat: Number.POSITIVE_INFINITY,
-      ease: "easeInOut",
-    },
-  }
-
   const pulseAnimation = {
     scale: [1, 1.05, 1],
     transition: {
@@ -70,41 +64,37 @@ export default function LandingPage() {
     },
   }
 
-  const features = [
-    {
-      title: "24/7 Cannabis Delivery San Bernardino",
-      description: "Premium cannabis flowers delivered to your door anytime in San Bernardino County.",
-      icon: <Truck className="size-5" />,
-    },
-    {
-      title: "Top-Shelf Cannabis Rialto & Fontana",
-      description: "Hand-selected, highest quality cannabis sourced from trusted California growers.",
-      icon: <Leaf className="size-5" />,
-    },
-    {
-      title: "Same-Day Weed Delivery Colton",
-      description: "Fast cannabis delivery within 30-60 minutes in Colton, Highland and surrounding areas.",
-      icon: <Clock className="size-5" />,
-    },
-    {
-      title: "Licensed Cannabis Delivery Service",
-      description: "Professional, discreet cannabis delivery with secure payment options throughout Inland Empire.",
-      icon: <Shield className="size-5" />,
-    },
-    {
-      title: "Expert Cannabis Curation",
-      description: "Our team carefully selects each cannabis product for quality, potency and customer satisfaction.",
-      icon: <Users className="size-5" />,
-    },
-    {
-      title: "Premium Cannabis Customer Support",
-      description: "Friendly cannabis experts available 24/7 to help with product selection and delivery questions.",
-      icon: <Star className="size-5" />,
-    },
+  const dailySpecials = [
+    { day: "Sunday", special: "Sunday Stash", description: "Choice of 7g for $20 OR Half O for $50", price: "$20-$50" },
+    { day: "Monday", special: "$5 Gram Madness", description: "Everything $5/g", price: "$5/g" },
+    { day: "Tuesday", special: "7g Tuesday", description: "7g for $20", price: "$20" },
+    { day: "Wednesday", special: "Half Zip Wednesday", description: "Half Ounce $50", price: "$50" },
+    { day: "Thursday", special: "Ten Sack Thursday", description: "10g for $50", price: "$50" },
+    { day: "Friday", special: "Fat O Friday", description: "Ounce $100", price: "$100" },
+    { day: "Saturday", special: "Top Shelf Saturday", description: "Premium Ounce $120", price: "$120" },
   ]
+
+  const todaysSpecial = dailySpecials[currentDay]
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-black text-white">
+      <motion.div
+        className="bg-gradient-to-r from-green-600 to-green-700 text-white py-3 text-center relative overflow-hidden"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-transparent"
+          animate={{ x: ["-100%", "100%"] }}
+          transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+        />
+        <motion.div className="relative z-10 font-bold text-lg" animate={pulseAnimation}>
+          🔥 Today's Special: {todaysSpecial.special} - {todaysSpecial.description} 🔥
+        </motion.div>
+        <div className="text-sm opacity-90">Call (763) 344-1778 to order now!</div>
+      </motion.div>
+
       <motion.div
         className="fixed bottom-6 right-6 z-50"
         initial={{ scale: 0, rotate: -180 }}
@@ -114,8 +104,9 @@ export default function LandingPage() {
         <motion.div animate={pulseAnimation} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
           <Button
             size="lg"
-            className="rounded-full h-14 w-14 bg-yellow-500 hover:bg-yellow-400 text-black shadow-2xl shadow-yellow-500/50"
+            className="rounded-full h-14 w-14 bg-white hover:bg-gray-200 text-black shadow-2xl shadow-white/30"
             aria-label="Call for cannabis delivery"
+            onClick={() => window.open("tel:+17633441778", "_self")}
           >
             <Phone className="size-6" />
           </Button>
@@ -123,9 +114,9 @@ export default function LandingPage() {
       </motion.div>
 
       <header
-        className={`sticky top-0 z-50 w-full backdrop-blur-lg transition-all duration-300 ${isScrolled ? "bg-black/80 shadow-sm border-b border-green-500/20" : "bg-transparent"}`}
+        className={`sticky top-0 z-50 w-full backdrop-blur-lg transition-all duration-300 ${isScrolled ? "bg-black/90 shadow-lg border-b border-gray-800" : "bg-black/80"}`}
       >
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container flex h-20 items-center justify-between">
           <motion.div
             className="flex items-center gap-3"
             whileHover={{ scale: 1.05 }}
@@ -134,97 +125,113 @@ export default function LandingPage() {
             <Image
               src="/images/flower-dept-logo.png"
               alt="Flower Dept Cannabis Delivery San Bernardino"
-              width={120}
-              height={40}
-              className="h-8 w-auto"
+              width={240}
+              height={80}
+              className="h-16 w-auto"
             />
           </motion.div>
-          <nav className="hidden md:flex gap-8" role="navigation" aria-label="Main navigation">
-            <Link href="#services" className="text-sm font-medium text-gray-300 transition-colors hover:text-green-400">
-              Cannabis Services
-            </Link>
-            <Link href="#delivery" className="text-sm font-medium text-gray-300 transition-colors hover:text-green-400">
-              Delivery Areas
-            </Link>
-            <Link href="#contact" className="text-sm font-medium text-gray-300 transition-colors hover:text-green-400">
-              Contact
-            </Link>
+
+          <nav className="hidden lg:flex gap-1" role="navigation" aria-label="Daily specials">
+            {dailySpecials.map((special, index) => (
+              <motion.div
+                key={special.day}
+                className={`px-3 py-2 rounded-lg transition-colors cursor-pointer group ${
+                  index === currentDay ? "bg-green-600 border-2 border-green-400" : "bg-gray-800 hover:bg-gray-700"
+                }`}
+                whileHover={{ scale: 1.02 }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className={`text-xs font-semibold ${index === currentDay ? "text-white" : "text-white"}`}>
+                  {special.day} {index === currentDay && "🔥"}
+                </div>
+                <div
+                  className={`text-xs transition-colors ${
+                    index === currentDay ? "text-green-100" : "text-gray-300 group-hover:text-white"
+                  }`}
+                >
+                  {special.special}
+                </div>
+                <div className={`text-xs font-bold ${index === currentDay ? "text-green-200" : "text-gray-400"}`}>
+                  {special.price}
+                </div>
+              </motion.div>
+            ))}
           </nav>
+
           <div className="hidden md:flex gap-4 items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="rounded-full text-gray-300 hover:text-green-400"
-            >
-              {mounted && theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
-              <span className="sr-only">Toggle theme</span>
-            </Button>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button className="rounded-full bg-green-600 hover:bg-green-500 text-black font-semibold">
+              <Button
+                className="rounded-full bg-white hover:bg-gray-200 text-black font-semibold px-6 py-2 shadow-lg"
+                onClick={() => window.open("tel:+17633441778", "_self")}
+              >
                 <Phone className="mr-2 size-4" />
-                Call Now
+                (763) 344-1778
               </Button>
             </motion.div>
           </div>
+
           <div className="flex items-center gap-4 md:hidden">
-            <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-full text-gray-300">
-              {mounted && theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
-            </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-gray-300"
+              className="text-white hover:bg-gray-800"
             >
               {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
               <span className="sr-only">Toggle menu</span>
             </Button>
           </div>
         </div>
-        {/* Mobile menu */}
+
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-16 inset-x-0 bg-black/95 backdrop-blur-lg border-b border-green-500/20"
+            className="md:hidden absolute top-20 inset-x-0 bg-black/95 backdrop-blur-lg border-b border-gray-800 shadow-lg"
           >
-            <div className="container py-4 flex flex-col gap-4">
-              <Link
-                href="#services"
-                className="py-2 text-sm font-medium text-gray-300"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Services
-              </Link>
-              <Link
-                href="#delivery"
-                className="py-2 text-sm font-medium text-gray-300"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Delivery
-              </Link>
-              <Link
-                href="#contact"
-                className="py-2 text-sm font-medium text-gray-300"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Contact
-              </Link>
-              <div className="flex flex-col gap-2 pt-2 border-t border-green-500/20">
-                <Button className="rounded-full bg-green-600 hover:bg-green-500 text-black font-semibold">
-                  <Phone className="mr-2 size-4" />
-                  Call Now
-                </Button>
+            <div className="container py-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Daily Specials</h3>
+              <div className="grid grid-cols-1 gap-3 mb-6">
+                {dailySpecials.map((special, index) => (
+                  <div
+                    key={special.day}
+                    className={`p-3 rounded-lg ${
+                      index === currentDay ? "bg-green-600 border-2 border-green-400" : "bg-gray-800"
+                    }`}
+                  >
+                    <div className={`font-semibold ${index === currentDay ? "text-white" : "text-white"}`}>
+                      {special.day} {index === currentDay && "🔥 TODAY"}
+                    </div>
+                    <div className={`text-sm ${index === currentDay ? "text-green-100" : "text-gray-300"}`}>
+                      {special.special}
+                    </div>
+                    <div className={`text-xs ${index === currentDay ? "text-green-50" : "text-gray-500"}`}>
+                      {special.description}
+                    </div>
+                    <div className={`text-sm font-bold ${index === currentDay ? "text-green-200" : "text-gray-400"}`}>
+                      {special.price}
+                    </div>
+                  </div>
+                ))}
               </div>
+              <Button
+                className="w-full rounded-full bg-white hover:bg-gray-200 text-black font-semibold"
+                onClick={() => window.open("tel:+17633441778", "_self")}
+              >
+                <Phone className="mr-2 size-4" />
+                Call (763) 344-1778
+              </Button>
             </div>
           </motion.div>
         )}
       </header>
+
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-20 md:py-32 lg:py-40 overflow-hidden relative">
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
           <motion.div
             className="absolute inset-0 -z-10 h-full w-full bg-black bg-[linear-gradient(to_right,#065f46_1px,transparent_1px),linear-gradient(to_bottom,#065f46_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]"
             style={{ y }}
@@ -245,145 +252,133 @@ export default function LandingPage() {
             }}
           ></motion.div>
 
-          <div className="container px-4 md:px-6 relative">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-center max-w-4xl mx-auto mb-12"
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              >
-                <Badge className="mb-4 rounded-full px-4 py-1.5 text-sm font-medium bg-green-600/20 text-green-400 border-green-500/30">
-                  🔥 #1 Cannabis Delivery San Bernardino County
+          <div className="container relative z-10">
+            <motion.div className="mx-auto max-w-4xl text-center" variants={container} initial="hidden" animate="show">
+              <motion.div variants={item} className="mb-8">
+                <Image
+                  src="/images/flower-dept-logo.png"
+                  alt="Flower Dept Cannabis Delivery"
+                  width={300}
+                  height={100}
+                  className="mx-auto h-20 w-auto mb-6"
+                />
+                <Badge
+                  variant="secondary"
+                  className="mb-6 bg-gray-800 text-white border border-gray-700 hover:bg-gray-700"
+                >
+                  Licensed Cannabis Delivery • San Bernardino County
                 </Badge>
               </motion.div>
               <motion.h1
-                className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-green-200 to-yellow-200"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
+                variants={item}
+                className="text-4xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl mb-6"
               >
-                Cannabis Delivery San Bernardino | Same-Day Weed Delivery Rialto, Fontana, Colton, Highland
+                Premium Cannabis
+                <span className="block bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent">
+                  Delivered Fast
+                </span>
               </motion.h1>
-              <motion.p
-                className="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-              >
-                🌿 Premium cannabis delivery service in San Bernardino County! Top-shelf flowers, concentrates & edibles
-                delivered same-day to Rialto, Fontana, Colton, Highland. Licensed dispensary delivery 24/7. Call (763)
-                344-1778 now!
+              <motion.p variants={item} className="mx-auto max-w-[700px] text-gray-300 md:text-xl mb-8">
+                Fast, discreet cannabis delivery to San Bernardino, Rialto, Fontana, Colton, Highland. Premium products,
+                unbeatable prices, professional service. Call now!
               </motion.p>
-
-              <motion.div
-                className="flex flex-col sm:flex-row gap-4 justify-center mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.6 }}
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(234, 179, 8, 0.3)" }}
-                  whileTap={{ scale: 0.95 }}
-                >
+              <motion.div variants={item} className="flex flex-col sm:flex-row gap-4 justify-center">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     size="lg"
-                    className="rounded-full h-14 px-8 text-lg bg-yellow-600 hover:bg-yellow-500 text-black font-bold shadow-lg hover:shadow-yellow-500/25 transition-all"
+                    className="rounded-full bg-white hover:bg-gray-200 text-black px-8 py-4 text-lg font-semibold shadow-xl"
+                    onClick={() => window.open("tel:+17633441778", "_self")}
                   >
                     <Phone className="mr-2 size-5" />
-                    Call/Text (763) 344-1778
-                    <ArrowRight className="ml-2 size-5" />
+                    Call (763) 344-1778
                   </Button>
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     size="lg"
                     variant="outline"
-                    className="rounded-full h-14 px-8 text-lg border-green-500 text-green-400 hover:bg-green-500/10 bg-transparent"
+                    className="rounded-full border-2 border-white text-white hover:bg-white hover:text-black px-8 py-4 text-lg font-semibold bg-transparent"
+                    onClick={() => document.getElementById("verification")?.scrollIntoView({ behavior: "smooth" })}
                   >
-                    🌿 View Menu
+                    Learn More
+                    <ArrowRight className="ml-2 size-5" />
                   </Button>
                 </motion.div>
               </motion.div>
-
-              <motion.div
-                className="mb-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1, duration: 0.5 }}
-              >
-                <motion.div animate={pulseAnimation} className="inline-block">
-                  <div className="text-2xl md:text-3xl font-bold text-yellow-400 mb-2">📞 (763) 344-1778</div>
-                  <div className="text-sm text-gray-400">Call or Text Now for Instant Service</div>
-                </motion.div>
-              </motion.div>
-
-              <motion.div
-                className="flex items-center justify-center gap-6 text-sm text-gray-400"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.9, duration: 0.6 }}
-              >
-                {[
-                  { icon: Check, text: "21+ Only" },
-                  { icon: Check, text: "ID Required" },
-                  { icon: Check, text: "Discreet Delivery" },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    className="flex items-center gap-1"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1 + i * 0.1, duration: 0.4 }}
-                  >
-                    <item.icon className="size-4 text-green-400" />
-                    <span>{item.text}</span>
-                  </motion.div>
-                ))}
-              </motion.div>
             </motion.div>
+          </div>
+        </section>
 
+        {/* Daily Specials Section */}
+        <section className="w-full py-20 bg-gray-900">
+          <div className="container">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="relative mx-auto max-w-5xl"
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
             >
+              <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">Weekly Specials Schedule</h2>
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+                Save big with our rotating daily deals. Call to place your order and take advantage of today's special!
+              </p>
               <motion.div
-                className="rounded-xl overflow-hidden shadow-2xl border border-green-500/20 bg-gradient-to-b from-gray-900 to-black"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                className="mt-6 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl max-w-md mx-auto"
+                animate={pulseAnimation}
               >
-                <Image
-                  src="/luxury-cannabis-app.png"
-                  width={1280}
-                  height={720}
-                  alt="Flower Dept delivery app"
-                  className="w-full h-auto"
-                  priority
-                />
-                <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-green-500/20"></div>
+                <div className="text-lg font-bold">🔥 TODAY: {todaysSpecial.special}</div>
+                <div className="text-sm opacity-90">{todaysSpecial.description}</div>
+                <div className="text-xl font-bold mt-2">{todaysSpecial.price}</div>
               </motion.div>
-              <motion.div
-                className="absolute -bottom-6 -right-6 -z-10 h-[300px] w-[300px] rounded-full bg-gradient-to-br from-green-500/30 to-yellow-500/30 blur-3xl opacity-70"
-                animate={floatingAnimation}
-              ></motion.div>
-              <motion.div
-                className="absolute -top-6 -left-6 -z-10 h-[300px] w-[300px] rounded-full bg-gradient-to-br from-yellow-500/30 to-green-500/30 blur-3xl opacity-70"
-                animate={{
-                  y: [0, -15, 0],
-                  transition: {
-                    duration: 3.5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  },
-                }}
-              ></motion.div>
             </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {dailySpecials.map((special, index) => (
+                <motion.div
+                  key={special.day}
+                  className={`p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border ${
+                    index === currentDay
+                      ? "bg-gradient-to-br from-green-500 to-green-600 text-white border-green-400 transform scale-105"
+                      : "bg-gray-800 border-gray-700"
+                  }`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: index === currentDay ? 1.05 : 1.02 }}
+                >
+                  <div className="text-center">
+                    <h3 className={`text-xl font-bold mb-2 ${index === currentDay ? "text-white" : "text-white"}`}>
+                      {special.day} {index === currentDay && "🔥"}
+                    </h3>
+                    <div
+                      className={`text-lg font-semibold mb-2 ${index === currentDay ? "text-green-100" : "text-gray-200"}`}
+                    >
+                      {special.special}
+                    </div>
+                    <p className={`text-sm mb-2 ${index === currentDay ? "text-green-50" : "text-gray-300"}`}>
+                      {special.description}
+                    </p>
+                    <div
+                      className={`text-2xl font-bold mb-4 ${index === currentDay ? "text-yellow-300" : "text-green-400"}`}
+                    >
+                      {special.price}
+                    </div>
+                    <Button
+                      className={`w-full rounded-full font-semibold ${
+                        index === currentDay
+                          ? "bg-yellow-400 hover:bg-yellow-300 text-black"
+                          : "bg-white hover:bg-gray-200 text-black"
+                      }`}
+                      onClick={() => window.open("tel:+17633441778", "_self")}
+                    >
+                      <Phone className="mr-2 size-4" />
+                      {index === currentDay ? "Order Today's Special!" : "Order Now"}
+                    </Button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -430,61 +425,43 @@ export default function LandingPage() {
         </section>
 
         {/* Services Section */}
-        <section id="services" className="w-full py-20 md:py-32">
-          <div className="container px-4 md:px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
-            >
-              <Badge className="rounded-full px-4 py-1.5 text-sm font-medium bg-green-600/20 text-green-400 border-green-500/30">
-                Cannabis Delivery Services
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-                Premium Cannabis Delivery San Bernardino County - Everything You Need
-              </h2>
-              <p className="max-w-[800px] text-gray-300 md:text-lg">
-                From premium cannabis flower to fast same-day delivery, we provide a complete cannabis experience across
-                San Bernardino, Rialto, Fontana, Colton, Highland and surrounding Inland Empire areas.
+        <section className="py-20 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <Image
+                src="/images/flower-dept-logo.png"
+                alt="Flower Dept Services"
+                width={200}
+                height={67}
+                className="h-10 w-auto mx-auto mb-6 opacity-80"
+              />
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Our Premium Services</h2>
+              <p className="text-gray-500 leading-relaxed">
+                We offer a wide range of cannabis products and services to meet your needs.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              {features.map((feature, i) => (
-                <motion.div
-                  key={i}
-                  variants={item}
-                  whileHover={{
-                    scale: 1.05,
-                    rotateY: 5,
-                    boxShadow: "0 20px 40px rgba(16, 185, 129, 0.1)",
-                  }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <Card className="h-full overflow-hidden border-green-500/20 bg-gradient-to-b from-gray-900 to-black backdrop-blur transition-all hover:shadow-lg hover:shadow-green-500/10 hover:border-green-400/30">
-                    <CardContent className="p-6 flex flex-col h-full">
-                      <motion.div
-                        className="size-10 rounded-full bg-green-600/20 flex items-center justify-center text-green-400 mb-4"
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        {feature.icon}
-                      </motion.div>
-                      <h3 className="text-xl font-bold mb-2 text-white">{feature.title}</h3>
-                      <p className="text-gray-300">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold mb-2 text-white">24/7 Cannabis Delivery</h3>
+                <p className="text-gray-400">
+                  We provide fast and reliable cannabis delivery services around the clock.
+                </p>
+              </div>
+              <div className="bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold mb-2 text-white">Premium Cannabis Products</h3>
+                <p className="text-gray-400">
+                  We offer a wide selection of high-quality cannabis products, including flowers, edibles, and
+                  concentrates.
+                </p>
+              </div>
+              <div className="bg-gray-800 rounded-lg shadow-md p-6">
+                <h3 className="text-xl font-semibold mb-2 text-white">Discreet and Secure Delivery</h3>
+                <p className="text-gray-400">
+                  We ensure that all deliveries are discreet and secure to protect your privacy.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -562,70 +539,83 @@ export default function LandingPage() {
             </div>
 
             {/* ID verification requirements section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="mt-16 p-8 bg-gradient-to-br from-yellow-600/20 to-yellow-800/20 rounded-xl border border-yellow-500/30"
-            >
-              <div className="text-center">
+
+            <section id="verification" className="py-20 bg-gray-800">
+              <div className="container mx-auto px-4">
                 <motion.div
-                  className="text-4xl mb-4"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                  className="text-center max-w-4xl mx-auto"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
                 >
-                  🆔
-                </motion.div>
-                <h3 className="text-2xl font-bold text-yellow-400 mb-4">ID Verification Required</h3>
-                <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-                  For your safety and legal compliance, all customers must complete our secure verification process
-                  before placing their first order.
-                </p>
-                <div className="grid md:grid-cols-2 gap-6 text-left">
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-white">Required Documents:</h4>
-                    <ul className="space-y-2 text-sm text-gray-300">
-                      <li className="flex items-center gap-2">
-                        <Check className="size-4 text-green-400" />
-                        Valid government-issued photo ID
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="size-4 text-green-400" />
-                        Clear selfie holding your ID
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="size-4 text-green-400" />
-                        Must be 21+ years old
-                      </li>
-                    </ul>
+                  <motion.div
+                    className="text-4xl mb-4"
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                  >
+                    🆔
+                  </motion.div>
+                  <h3 className="text-2xl font-bold text-white mb-4">ID Verification Required</h3>
+                  <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+                    For your safety and legal compliance, all customers must complete our secure verification process
+                    before placing their first order.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-6 text-left">
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-white">Required Documents:</h4>
+                      <ul className="space-y-2 text-sm text-gray-300">
+                        <li className="flex items-center gap-2">
+                          <Check className="size-4 text-green-400" />
+                          Valid government-issued photo ID
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="size-4 text-green-400" />
+                          Clear selfie holding your ID
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="size-4 text-green-400" />
+                          Must be 21+ years old
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-white">Verification Process:</h4>
+                      <ol className="space-y-2 text-sm text-gray-300">
+                        <li className="flex items-start gap-2">
+                          <span className="bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">
+                            1
+                          </span>
+                          Call (763) 344-1778 to start verification
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">
+                            2
+                          </span>
+                          Text photos of ID & selfie to our secure line
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">
+                            3
+                          </span>
+                          Get approved & place your order
+                        </li>
+                      </ol>
+                    </div>
                   </div>
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-white">How to Send:</h4>
-                    <ul className="space-y-2 text-sm text-gray-300">
-                      <li className="flex items-center gap-2">
-                        <Phone className="size-4 text-green-400" />
-                        Text photos to (763) 344-1778
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Shield className="size-4 text-green-400" />
-                        Secure & confidential process
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Clock className="size-4 text-green-400" />
-                        Verification takes 5-10 minutes
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <motion.div className="mt-6" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button className="rounded-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold px-8">
-                    <Phone className="mr-2 size-4" />
-                    Call to Start Verification
-                  </Button>
+                  <motion.div className="mt-8" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button
+                      size="lg"
+                      className="rounded-full bg-white hover:bg-gray-200 text-black px-8 py-4 text-lg font-semibold"
+                      onClick={() => window.open("tel:+17633441778", "_self")}
+                    >
+                      <Phone className="mr-2 size-5" />
+                      Start Verification Process
+                    </Button>
+                  </motion.div>
                 </motion.div>
               </div>
-            </motion.div>
+            </section>
           </div>
         </section>
 
@@ -644,7 +634,7 @@ export default function LandingPage() {
               <Badge className="rounded-full px-4 py-1.5 text-sm font-medium bg-green-600/20 text-green-400 border-green-500/30">
                 Cannabis Delivery Areas
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white">
                 Cannabis Delivery San Bernardino, Rialto, Fontana, Colton, Highland - Fast & Discreet
               </h2>
               <p className="max-w-[800px] text-gray-300 md:text-lg">
@@ -713,7 +703,10 @@ export default function LandingPage() {
                 </div>
 
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button className="rounded-full bg-green-600 hover:bg-green-500 text-black font-semibold">
+                  <Button
+                    className="rounded-full bg-green-600 hover:bg-green-500 text-black font-semibold"
+                    onClick={() => window.open("tel:+17633441778", "_self")}
+                  >
                     <Phone className="mr-2 size-4" />
                     Call to Confirm Your Area
                   </Button>
@@ -787,7 +780,12 @@ export default function LandingPage() {
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2">
                     <Phone className="size-4 text-green-400" />
-                    <span className="text-gray-300">(763) 344-1778</span>
+                    <span
+                      className="text-gray-300 cursor-pointer hover:text-green-300 transition-colors"
+                      onClick={() => window.open("tel:+17633441778", "_self")}
+                    >
+                      (763) 344-1778
+                    </span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Clock className="size-4 text-green-400" />
@@ -809,7 +807,12 @@ export default function LandingPage() {
               >
                 <div className="text-center p-8 bg-gradient-to-br from-green-600/20 to-green-800/20 rounded-xl border border-green-500/30">
                   <motion.div animate={pulseAnimation} className="mb-4">
-                    <div className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">📞 (763) 344-1778</div>
+                    <div
+                      className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2 cursor-pointer hover:text-yellow-300 transition-colors"
+                      onClick={() => window.open("tel:+17633441778", "_self")}
+                    >
+                      📞 (763) 344-1778
+                    </div>
                     <div className="text-lg text-green-300">Call or Text for Instant Service</div>
                   </motion.div>
                   <p className="text-gray-300 mb-6">
@@ -817,7 +820,10 @@ export default function LandingPage() {
                     delivery.
                   </p>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button className="rounded-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold px-8 py-3">
+                    <Button
+                      className="rounded-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold px-8 py-3"
+                      onClick={() => window.open("tel:+17633441778", "_self")}
+                    >
                       <Phone className="mr-2 size-4" />
                       Call Now
                     </Button>
@@ -905,93 +911,65 @@ export default function LandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="w-full py-20 md:py-32 bg-gradient-to-br from-green-600 to-green-800 text-white relative overflow-hidden">
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
-          <motion.div
-            className="absolute -top-24 -left-24 w-64 h-64 bg-yellow-500/20 rounded-full blur-3xl"
-            animate={floatingAnimation}
-          ></motion.div>
-          <motion.div
-            className="absolute -bottom-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"
-            animate={{
-              y: [0, 20, 0],
-              transition: {
-                duration: 4,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              },
-            }}
-          ></motion.div>
-
-          <div className="container px-4 md:px-6 relative">
+        <section className="py-20 bg-gray-800 border-t border-gray-700">
+          <div className="container mx-auto px-4">
             <motion.div
+              className="text-center max-w-4xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center space-y-6 text-center"
+              transition={{ duration: 0.6 }}
             >
               <motion.h2
-                className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, type: "spring" }}
-              >
-                Ready for Same-Day Cannabis Delivery San Bernardino County?
-              </motion.h2>
-              <motion.p
-                className="mx-auto max-w-[700px] text-green-100 md:text-xl"
+                className="text-3xl font-bold text-white mb-4 sm:text-4xl"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: 0.6 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
               >
-                Experience the finest cannabis delivery service in San Bernardino, Rialto, Fontana, Colton, Highland.
-                Call (763) 344-1778 now for same-day cannabis delivery and enjoy premium flowers delivered to your door!
+                Ready to Order Premium Cannabis?
+              </motion.h2>
+              <motion.p
+                className="text-xl text-gray-300 mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4, duration: 0.4 }}
+              >
+                Call now for fast, discreet delivery to your door in San Bernardino County
               </motion.p>
 
               <motion.div
-                className="flex flex-col items-center gap-6 mt-4"
-                initial={{ opacity: 0, y: 30 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.6 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
               >
-                <motion.div animate={pulseAnimation} className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold text-yellow-300 mb-2">📞 (763) 344-1778</div>
-                  <div className="text-lg text-green-100">Call or Text for Instant Service</div>
-                </motion.div>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <motion.div
-                    whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(234, 179, 8, 0.4)" }}
-                    whileTap={{ scale: 0.95 }}
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    size="lg"
+                    className="rounded-full h-14 px-8 text-lg bg-white hover:bg-gray-200 text-black font-bold"
+                    onClick={() => window.open("tel:+17633441778", "_self")}
                   >
-                    <Button
-                      size="lg"
-                      variant="secondary"
-                      className="rounded-full h-14 px-8 text-lg bg-yellow-500 hover:bg-yellow-400 text-black font-bold"
-                    >
-                      <Phone className="mr-2 size-5" />
-                      Call/Text Now
-                      <ArrowRight className="ml-2 size-5" />
-                    </Button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="rounded-full h-14 px-8 text-lg bg-transparent border-white text-white hover:bg-white/10"
-                    >
-                      🌿 Browse Menu
-                    </Button>
-                  </motion.div>
-                </div>
+                    <Phone className="mr-2 size-5" />
+                    Call/Text Now
+                    <ArrowRight className="ml-2 size-5" />
+                  </Button>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full h-14 px-8 text-lg bg-transparent border-2 border-white text-white hover:bg-white hover:text-black"
+                  >
+                    🌿 Browse Menu
+                  </Button>
+                </motion.div>
               </motion.div>
 
               <motion.p
-                className="text-sm text-green-100 mt-4"
+                className="text-sm text-gray-400 mt-4"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
@@ -1003,6 +981,52 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
+
+      <footer className="bg-black text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="md:col-span-2">
+              <Image
+                src="/images/flower-dept-logo.png"
+                alt="Flower Dept Cannabis Delivery"
+                width={200}
+                height={67}
+                className="h-10 w-auto mb-4 brightness-0 invert"
+              />
+              <p className="text-gray-400 mb-4">
+                Premium cannabis delivery service in San Bernardino County. Licensed, secure, and professional.
+              </p>
+              <p className="text-gray-500">© {new Date().getFullYear()} Flower Dept. All rights reserved.</p>
+            </div>
+
+            <div>
+              <h4 className="text-lg font-semibold text-white mb-4">Daily Specials</h4>
+              <ul className="text-gray-400 space-y-1">
+                {dailySpecials.slice(0, 4).map((special) => (
+                  <li key={special.day} className="text-sm">
+                    <span className="font-medium">{special.day}:</span> {special.special} - {special.price}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-lg font-semibold text-white mb-4">Contact</h4>
+              <ul className="text-gray-400">
+                <li className="mb-2">
+                  <button
+                    onClick={() => window.open("tel:+17633441778", "_self")}
+                    className="hover:text-white transition-colors"
+                  >
+                    Phone: (763) 344-1778
+                  </button>
+                </li>
+                <li>Email: support@flowerdept.com</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
