@@ -19,7 +19,7 @@ const playfairDisplay = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://flowerdept.com"),
+  metadataBase: new URL("https://flowerdept.link"),
   title: {
     default: "Flower Dept | #1 Cannabis Delivery San Bernardino, Rialto, Fontana | Call (763) 344-1778",
     template: "%s | Flower Dept Cannabis Delivery",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Flower Dept",
-    url: "https://flowerdept.com",
+    url: "https://flowerdept.link",
     images: [
       {
         url: "/images/flower-dept-logo.png",
@@ -103,7 +103,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://flowerdept.com",
+    canonical: "https://flowerdept.link",
   },
   category: "Cannabis Delivery",
     generator: 'v0.app'
@@ -129,14 +129,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
-              "@id": "https://flowerdept.com",
+              "@id": "https://flowerdept.link",
               name: "Flower Dept",
               description:
-                "Premium cannabis delivery service in San Bernardino County. Fast, discreet delivery of lab-tested cannabis products.",
-              url: "https://flowerdept.com",
+                "Premium cannabis delivery service in San Bernardino County. Fast, discreet delivery of lab-tested cannabis products. $40 minimum order.",
+              url: "https://flowerdept.link",
               telephone: "+1-763-344-1778",
               priceRange: "$$",
-              image: "https://flowerdept.com/images/flower-dept-logo.png",
+              image: "https://flowerdept.link/images/flower-dept-logo.png",
               address: {
                 "@type": "PostalAddress",
                 addressLocality: "San Bernardino",
@@ -235,7 +235,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   name: "How do I order from Flower Dept?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Call us at (763) 344-1778 to place your order. First-time customers need to verify their ID by sending a photo of their ID and a selfie.",
+                    text: "Call us at (763) 344-1778 to place your order. $40 minimum on all orders. First-time customers need to verify their ID by sending a photo of their ID and a selfie.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Is there a minimum order for Flower Dept delivery?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes, there is a $40 minimum on all delivery orders.",
                   },
                 },
               ],
