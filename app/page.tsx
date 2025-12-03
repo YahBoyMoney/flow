@@ -2,1031 +2,684 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { motion, useScroll, useTransform } from "framer-motion"
-import { Check, Menu, X, ArrowRight, Truck, Shield, Clock, Leaf, Phone } from "lucide-react"
+import { motion } from "framer-motion"
+import { Phone, MapPin, Shield, Clock, ArrowRight, Check, ChevronDown, Instagram, Star, Zap, Gift } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Badge } from "@/components/ui/badge"
-
-const floatingAnimation = {
-  y: [0, 20, 0],
-  transition: {
-    duration: 4,
-    repeat: Number.POSITIVE_INFINITY,
-    ease: "easeInOut",
-  },
-}
 
 export default function Page() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [currentDay, setCurrentDay] = useState(0)
-  const { scrollYProgress } = useScroll()
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 })
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
+    setCurrentDay(new Date().getDay())
+
+    const calculateTimeLeft = () => {
+      const now = new Date()
+      const midnight = new Date()
+      midnight.setHours(24, 0, 0, 0)
+      const diff = midnight.getTime() - now.getTime()
+
+      return {
+        hours: Math.floor(diff / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000),
       }
     }
 
-    const today = new Date().getDay()
-    setCurrentDay(today)
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    setTimeLeft(calculateTimeLeft())
+    const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000)
+    return () => clearInterval(timer)
   }, [])
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  }
-
-  const pulseAnimation = {
-    scale: [1, 1.05, 1],
-    transition: {
-      duration: 2,
-      repeat: Number.POSITIVE_INFINITY,
-      ease: "easeInOut",
-    },
-  }
-
   const dailySpecials = [
-    { day: "Sunday", special: "Sunday Stash", description: "Choice of 7g for $20 OR Half O for $50", price: "$20-$50" },
-    { day: "Monday", special: "$5 Gram Madness", description: "Everything $5/g", price: "$5/g" },
-    { day: "Tuesday", special: "7g Tuesday", description: "7g for $20", price: "$20" },
-    { day: "Wednesday", special: "Half Zip Wednesday", description: "Half Ounce $50", price: "$50" },
-    { day: "Thursday", special: "Ten Sack Thursday", description: "10g for $50", price: "$50" },
-    { day: "Friday", special: "Fat O Friday", description: "Ounce $100", price: "$100" },
-    { day: "Saturday", special: "Top Shelf Saturday", description: "Premium Ounce $120", price: "$120" },
+    { day: "Sunday", name: "Sunday Stash", deal: "7g for $20 OR Half O for $50", price: "FROM $20" },
+    { day: "Monday", name: "$5 Gram Madness", deal: "Everything $5/g", price: "$5/g" },
+    { day: "Tuesday", name: "7g Tuesday", deal: "7g for $20", price: "$20" },
+    { day: "Wednesday", name: "Half Zip Wednesday", deal: "Half Ounce $50", price: "$50" },
+    { day: "Thursday", name: "Ten Sack Thursday", deal: "10g for $50", price: "$50" },
+    { day: "Friday", name: "Fat O Friday", deal: "Ounce $100", price: "$100" },
+    { day: "Saturday", name: "Top Shelf Saturday", deal: "Premium Ounce $120", price: "$120" },
   ]
 
   const todaysSpecial = dailySpecials[currentDay]
 
+  const stats = [
+    { value: "500+", label: "Happy customers" },
+    { value: "30min", label: "Avg delivery time" },
+    { value: "24/7", label: "Always available" },
+    { value: "5", label: "Cities served" },
+  ]
+
+  const trustSignals = ["Licensed & Legal", "Lab Tested Products", "Discreet Packaging", "ID Verified Delivery"]
+
+  const cities = ["San Bernardino", "Rialto", "Fontana", "Colton", "Highland"]
+
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-black text-white">
+    <div className="min-h-screen bg-white text-black antialiased selection:bg-black selection:text-white">
       <motion.div
-        className="bg-gradient-to-r from-green-600 to-green-700 text-white py-3 text-center relative overflow-hidden"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        className="bg-black text-white py-3 text-center relative overflow-hidden"
+        initial={{ y: -50 }}
+        animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-transparent"
+          className="absolute inset-0 bg-gradient-to-r from-green-600/20 via-transparent to-green-600/20"
           animate={{ x: ["-100%", "100%"] }}
           transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
         />
-        <motion.div className="relative z-10 font-bold text-lg" animate={pulseAnimation}>
-          🔥 Today's Special: {todaysSpecial.special} - {todaysSpecial.description} 🔥
-        </motion.div>
-        <div className="text-sm opacity-90">Call (763) 344-1778 to order now!</div>
+        <p className="text-sm font-medium tracking-wide relative z-10">
+          <span className="inline-flex items-center gap-2">
+            <Zap className="h-4 w-4 text-yellow-400 animate-pulse" />
+            <span className="font-bold text-yellow-400">LIMITED TIME:</span>
+            {todaysSpecial.name} — {todaysSpecial.deal}
+            <span className="hidden sm:inline-flex items-center gap-1 ml-2 px-2 py-0.5 bg-white/20 rounded text-xs">
+              Ends in {String(timeLeft.hours).padStart(2, "0")}:{String(timeLeft.minutes).padStart(2, "0")}:
+              {String(timeLeft.seconds).padStart(2, "0")}
+            </span>
+          </span>
+          <a href="tel:+17633441778" className="ml-4 underline hover:no-underline font-bold">
+            Order Now
+          </a>
+        </p>
       </motion.div>
 
-      <motion.div
-        className="fixed bottom-6 right-6 z-50"
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ delay: 2, duration: 0.5, type: "spring" }}
-      >
-        <motion.div animate={pulseAnimation} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-          <Button
-            size="lg"
-            className="rounded-full h-14 w-14 bg-white hover:bg-gray-200 text-black shadow-2xl shadow-white/30"
-            aria-label="Call for cannabis delivery"
-            onClick={() => window.open("tel:+17633441778", "_self")}
-          >
-            <Phone className="size-6" />
-          </Button>
-        </motion.div>
-      </motion.div>
-
-      <header
-        className={`sticky top-0 z-50 w-full backdrop-blur-lg transition-all duration-300 ${isScrolled ? "bg-black/90 shadow-lg border-b border-gray-800" : "bg-black/80"}`}
-      >
-        <div className="container flex h-20 items-center justify-between">
-          <motion.div
-            className="flex items-center gap-3"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white border-b border-black/5">
+        <div className="container mx-auto px-6">
+          <div className="flex h-20 items-center justify-between">
             <Image
               src="/images/flower-dept-logo.png"
-              alt="Flower Dept Cannabis Delivery San Bernardino"
-              width={240}
-              height={80}
-              className="h-16 w-auto"
+              alt="Flower Dept - Cannabis Delivery San Bernardino"
+              width={180}
+              height={60}
+              className="h-10 w-auto"
+              priority
             />
-          </motion.div>
-
-          <nav className="hidden lg:flex gap-1" role="navigation" aria-label="Daily specials">
-            {dailySpecials.map((special, index) => (
-              <motion.div
-                key={special.day}
-                className={`px-3 py-2 rounded-lg transition-colors cursor-pointer group ${
-                  index === currentDay ? "bg-green-600 border-2 border-green-400" : "bg-gray-800 hover:bg-gray-700"
-                }`}
-                whileHover={{ scale: 1.02 }}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.instagram.com/flowerdeptsb/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-black hover:text-black/70 transition-colors"
+                aria-label="Follow Flower Dept on Instagram"
               >
-                <div className={`text-xs font-semibold ${index === currentDay ? "text-white" : "text-white"}`}>
-                  {special.day} {index === currentDay && "🔥"}
-                </div>
-                <div
-                  className={`text-xs transition-colors ${
-                    index === currentDay ? "text-green-100" : "text-gray-300 group-hover:text-white"
-                  }`}
-                >
-                  {special.special}
-                </div>
-                <div className={`text-xs font-bold ${index === currentDay ? "text-green-200" : "text-gray-400"}`}>
-                  {special.price}
-                </div>
-              </motion.div>
-            ))}
-          </nav>
-
-          <div className="hidden md:flex gap-4 items-center">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Instagram className="h-6 w-6" />
+              </a>
               <Button
-                className="rounded-full bg-white hover:bg-gray-200 text-black font-semibold px-6 py-2 shadow-lg"
-                onClick={() => window.open("tel:+17633441778", "_self")}
+                onClick={() => (window.location.href = "tel:+17633441778")}
+                className="bg-black text-white hover:bg-black/90 font-medium px-6 rounded-full"
               >
-                <Phone className="mr-2 size-4" />
-                (763) 344-1778
-              </Button>
-            </motion.div>
-          </div>
-
-          <div className="flex items-center gap-4 md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-white hover:bg-gray-800"
-            >
-              {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </div>
-        </div>
-
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-20 inset-x-0 bg-black/95 backdrop-blur-lg border-b border-gray-800 shadow-lg"
-          >
-            <div className="container py-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Daily Specials</h3>
-              <div className="grid grid-cols-1 gap-3 mb-6">
-                {dailySpecials.map((special, index) => (
-                  <div
-                    key={special.day}
-                    className={`p-3 rounded-lg ${
-                      index === currentDay ? "bg-green-600 border-2 border-green-400" : "bg-gray-800"
-                    }`}
-                  >
-                    <div className={`font-semibold ${index === currentDay ? "text-white" : "text-white"}`}>
-                      {special.day} {index === currentDay && "🔥 TODAY"}
-                    </div>
-                    <div className={`text-sm ${index === currentDay ? "text-green-100" : "text-gray-300"}`}>
-                      {special.special}
-                    </div>
-                    <div className={`text-xs ${index === currentDay ? "text-green-50" : "text-gray-500"}`}>
-                      {special.description}
-                    </div>
-                    <div className={`text-sm font-bold ${index === currentDay ? "text-green-200" : "text-gray-400"}`}>
-                      {special.price}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Button
-                className="w-full rounded-full bg-white hover:bg-gray-200 text-black font-semibold"
-                onClick={() => window.open("tel:+17633441778", "_self")}
-              >
-                <Phone className="mr-2 size-4" />
-                Call (763) 344-1778
+                <Phone className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">(763) 344-1778</span>
+                <span className="sm:hidden">Call Now</span>
               </Button>
             </div>
-          </motion.div>
-        )}
+          </div>
+        </div>
       </header>
 
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-          <motion.div
-            className="absolute inset-0 -z-10 h-full w-full bg-black bg-[linear-gradient(to_right,#065f46_1px,transparent_1px),linear-gradient(to_bottom,#065f46_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]"
-            style={{ y }}
-          ></motion.div>
-          <motion.div
-            className="absolute -top-24 -right-24 w-96 h-96 bg-green-500/10 rounded-full blur-3xl"
-            animate={floatingAnimation}
-          ></motion.div>
-          <motion.div
-            className="absolute -bottom-24 -left-24 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl"
-            animate={{
-              y: [0, 15, 0],
-              transition: {
-                duration: 4,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              },
+      <main>
+        <section className="relative py-16 lg:py-24 px-6 overflow-hidden">
+          {/* Background pattern */}
+          <div
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23000000' fillOpacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}
-          ></motion.div>
+          />
 
-          <div className="container relative z-10">
-            <motion.div className="mx-auto max-w-4xl text-center" variants={container} initial="hidden" animate="show">
-              <motion.div variants={item} className="mb-8">
-                <Image
-                  src="/images/flower-dept-logo.png"
-                  alt="Flower Dept Cannabis Delivery"
-                  width={300}
-                  height={100}
-                  className="mx-auto h-20 w-auto mb-6"
-                />
-                <Badge
-                  variant="secondary"
-                  className="mb-6 bg-gray-800 text-white border border-gray-700 hover:bg-gray-700"
-                >
-                  Licensed Cannabis Delivery • San Bernardino County
-                </Badge>
-              </motion.div>
-              <motion.h1
-                variants={item}
-                className="text-4xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl mb-6"
-              >
-                Premium Cannabis
-                <span className="block bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent">
-                  Delivered Fast
-                </span>
-              </motion.h1>
-              <motion.p variants={item} className="mx-auto max-w-[700px] text-gray-300 md:text-xl mb-8">
-                Fast, discreet cannabis delivery to San Bernardino, Rialto, Fontana, Colton, Highland. Premium products,
-                unbeatable prices, professional service. Call now!
-              </motion.p>
-              <motion.div variants={item} className="flex flex-col sm:flex-row gap-4 justify-center">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="lg"
-                    className="rounded-full bg-white hover:bg-gray-200 text-black px-8 py-4 text-lg font-semibold shadow-xl"
-                    onClick={() => window.open("tel:+17633441778", "_self")}
-                  >
-                    <Phone className="mr-2 size-5" />
-                    Call (763) 344-1778
-                  </Button>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="rounded-full border-2 border-white text-white hover:bg-white hover:text-black px-8 py-4 text-lg font-semibold bg-transparent"
-                    onClick={() => document.getElementById("verification")?.scrollIntoView({ behavior: "smooth" })}
-                  >
-                    Learn More
-                    <ArrowRight className="ml-2 size-5" />
-                  </Button>
-                </motion.div>
-              </motion.div>
+          <div className="container mx-auto max-w-6xl relative z-10">
+            {/* Trust bar */}
+            <motion.div
+              className="flex flex-wrap justify-center gap-4 mb-12"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              {trustSignals.map((signal, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm text-black/60">
+                  <Check className="h-4 w-4 text-green-600" />
+                  <span>{signal}</span>
+                </div>
+              ))}
             </motion.div>
+
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Left Content */}
+              <motion.div
+                className="space-y-8 text-center lg:text-left"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <div className="space-y-4">
+                  <motion.div
+                    className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full"
+                    animate={{ scale: [1, 1.02, 1] }}
+                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+                  >
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <span className="text-sm font-semibold">Now Delivering in Your Area</span>
+                  </motion.div>
+
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
+                    Premium Cannabis
+                    <br />
+                    <span className="bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+                      Delivered Fast
+                    </span>
+                  </h1>
+
+                  <p className="text-lg sm:text-xl text-black/60 leading-relaxed max-w-lg mx-auto lg:mx-0">
+                    San Bernardino County's #1 rated cannabis delivery.
+                    <strong className="text-black"> Call now and get your order in 30 minutes or less.</strong>
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      onClick={() => (window.location.href = "tel:+17633441778")}
+                      className="bg-green-600 text-white hover:bg-green-700 h-16 px-10 text-xl font-bold rounded-full shadow-lg shadow-green-600/30 w-full sm:w-auto"
+                      size="lg"
+                    >
+                      <Phone className="mr-3 h-6 w-6 animate-pulse" />
+                      (763) 344-1778
+                    </Button>
+                  </motion.div>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="border-2 border-black text-black hover:bg-black hover:text-white h-16 px-8 text-lg font-semibold rounded-full transition-all bg-transparent"
+                    size="lg"
+                  >
+                    <a href="https://www.instagram.com/flowerdeptsb/" target="_blank" rel="noopener noreferrer">
+                      <Instagram className="mr-2 h-5 w-5" />
+                      @flowerdeptsb
+                    </a>
+                  </Button>
+                </div>
+
+                <div className="flex items-center gap-4 justify-center lg:justify-start pt-4">
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div
+                        key={i}
+                        className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-600"
+                      >
+                        {String.fromCharCode(64 + i)}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-left">
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      ))}
+                      <span className="text-sm font-bold ml-1">5.0</span>
+                    </div>
+                    <p className="text-xs text-black/50">from 500+ happy customers</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="relative"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <div className="bg-black text-white p-8 sm:p-10 lg:p-12 rounded-3xl relative overflow-hidden">
+                  {/* Animated background */}
+                  <div className="absolute inset-0 opacity-10">
+                    <motion.div
+                      className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full blur-3xl"
+                      animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+                      transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
+                    />
+                  </div>
+
+                  <div className="space-y-6 relative z-10">
+                    {/* Urgency badge */}
+                    <div className="flex items-center justify-between">
+                      <motion.div
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 rounded-full text-sm font-bold"
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                      >
+                        <Gift className="h-4 w-4" />
+                        TODAY ONLY
+                      </motion.div>
+                      <div className="text-right">
+                        <p className="text-xs text-white/50">Expires in</p>
+                        <p className="font-mono font-bold text-lg">
+                          {String(timeLeft.hours).padStart(2, "0")}:{String(timeLeft.minutes).padStart(2, "0")}:
+                          {String(timeLeft.seconds).padStart(2, "0")}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-white/60 text-sm uppercase tracking-wider mb-2">
+                        {todaysSpecial.day}'s Special
+                      </p>
+                      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">{todaysSpecial.name}</h2>
+                      <p className="text-xl text-white/80">{todaysSpecial.deal}</p>
+                    </div>
+
+                    <div className="flex items-end gap-4">
+                      <span className="text-5xl lg:text-6xl font-bold text-green-400">{todaysSpecial.price}</span>
+                      <span className="text-white/40 line-through text-2xl mb-2">$150</span>
+                    </div>
+
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button
+                        onClick={() => (window.location.href = "tel:+17633441778")}
+                        className="w-full bg-green-500 text-white hover:bg-green-400 h-16 text-xl font-bold rounded-full"
+                      >
+                        <Phone className="mr-3 h-6 w-6" />
+                        Claim This Deal Now
+                      </Button>
+                    </motion.div>
+
+                    <p className="text-center text-sm text-white/50">
+                      <Check className="inline h-4 w-4 mr-1" />
+                      Free delivery on all orders
+                    </p>
+                  </div>
+                </div>
+                {/* Shadow decoration */}
+                <div className="absolute -z-10 top-4 left-4 right-4 bottom-4 bg-green-600/20 rounded-3xl blur-xl" />
+              </motion.div>
+            </div>
+
+            <motion.div
+              className="mt-16 text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+            >
+              <p className="text-sm text-black/40 mb-3">Now delivering to</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                {cities.map((city, i) => (
+                  <span key={i} className="px-4 py-2 bg-black/5 rounded-full text-sm font-medium">
+                    {city}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+          >
+            <ChevronDown className="h-8 w-8 text-black/20" />
+          </motion.div>
+        </section>
+
+        {/* Stats Bar */}
+        <section className="border-y border-black/10 bg-black/[0.02]">
+          <div className="container mx-auto">
+            <div className="grid grid-cols-2 lg:grid-cols-4">
+              {stats.map((stat, i) => (
+                <motion.div
+                  key={i}
+                  className="py-10 px-6 text-center border-r border-black/10 last:border-r-0"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <div className="text-4xl lg:text-5xl font-bold">{stat.value}</div>
+                  <div className="text-sm text-black/50 mt-1">{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Daily Specials Section */}
-        <section className="w-full py-20 bg-gray-900">
-          <div className="container">
+        {/* Daily Specials */}
+        <section id="specials" className="py-24 lg:py-32 px-6">
+          <div className="container mx-auto max-w-6xl">
             <motion.div
               className="text-center mb-16"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">Weekly Specials Schedule</h2>
-              <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-                Save big with our rotating daily deals. Call to place your order and take advantage of today's special!
-              </p>
-              <motion.div
-                className="mt-6 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl max-w-md mx-auto"
-                animate={pulseAnimation}
-              >
-                <div className="text-lg font-bold">🔥 TODAY: {todaysSpecial.special}</div>
-                <div className="text-sm opacity-90">{todaysSpecial.description}</div>
-                <div className="text-xl font-bold mt-2">{todaysSpecial.price}</div>
-              </motion.div>
+              <p className="text-sm font-semibold tracking-widest text-black/40 uppercase mb-4">Save Every Day</p>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">Weekly specials</h2>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               {dailySpecials.map((special, index) => (
                 <motion.div
                   key={special.day}
-                  className={`p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border ${
+                  className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
                     index === currentDay
-                      ? "bg-gradient-to-br from-green-500 to-green-600 text-white border-green-400 transform scale-105"
-                      : "bg-gray-800 border-gray-700"
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black border-black/10 hover:border-black"
                   }`}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: index === currentDay ? 1.05 : 1.02 }}
+                  transition={{ delay: index * 0.05 }}
+                  onClick={() => (window.location.href = "tel:+17633441778")}
                 >
-                  <div className="text-center">
-                    <h3 className={`text-xl font-bold mb-2 ${index === currentDay ? "text-white" : "text-white"}`}>
-                      {special.day} {index === currentDay && "🔥"}
-                    </h3>
-                    <div
-                      className={`text-lg font-semibold mb-2 ${index === currentDay ? "text-green-100" : "text-gray-200"}`}
-                    >
-                      {special.special}
+                  {index === currentDay && (
+                    <div className="absolute -top-3 left-4 px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full">
+                      TODAY
                     </div>
-                    <p className={`text-sm mb-2 ${index === currentDay ? "text-green-50" : "text-gray-300"}`}>
-                      {special.description}
+                  )}
+                  <div className="space-y-4">
+                    <p
+                      className={`text-xs font-semibold tracking-widest uppercase ${index === currentDay ? "text-white/60" : "text-black/40"}`}
+                    >
+                      {special.day}
                     </p>
-                    <div
-                      className={`text-2xl font-bold mb-4 ${index === currentDay ? "text-yellow-300" : "text-green-400"}`}
-                    >
-                      {special.price}
+                    <h3 className="text-xl font-bold">{special.name}</h3>
+                    <p className={`text-sm ${index === currentDay ? "text-white/70" : "text-black/50"}`}>
+                      {special.deal}
+                    </p>
+                    <div className="pt-4 border-t border-current/20">
+                      <span className="text-2xl font-bold">{special.price}</span>
                     </div>
-                    <Button
-                      className={`w-full rounded-full font-semibold ${
-                        index === currentDay
-                          ? "bg-yellow-400 hover:bg-yellow-300 text-black"
-                          : "bg-white hover:bg-gray-200 text-black"
-                      }`}
-                      onClick={() => window.open("tel:+17633441778", "_self")}
-                    >
-                      <Phone className="mr-2 size-4" />
-                      {index === currentDay ? "Order Today's Special!" : "Order Now"}
-                    </Button>
                   </div>
                 </motion.div>
               ))}
             </div>
-          </div>
-        </section>
 
-        {/* Trust Indicators */}
-        <section className="w-full py-12 border-y border-green-500/20 bg-gray-900/50">
-          <div className="container px-4 md:px-6">
             <motion.div
-              className="flex flex-col items-center justify-center space-y-4 text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className="text-center mt-12"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
             >
-              <p className="text-sm font-medium text-gray-400">
-                Trusted cannabis delivery service across San Bernardino County
-              </p>
-              <motion.div
-                className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16 text-gray-500"
-                variants={container}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true }}
+              <Button
+                onClick={() => (window.location.href = "tel:+17633441778")}
+                className="bg-green-600 text-white hover:bg-green-700 h-14 px-10 text-lg font-semibold rounded-full shadow-lg shadow-green-600/20"
               >
-                {[
-                  { icon: Clock, text: "24/7 Cannabis Delivery" },
-                  { icon: Truck, text: "Same-Day Weed Delivery" },
-                  { icon: Shield, text: "Licensed & Discreet" },
-                  { icon: Leaf, text: "Premium Cannabis Quality" },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    className="flex items-center gap-2"
-                    variants={item}
-                    whileHover={{ scale: 1.1, color: "#10b981" }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    <item.icon className="size-5 text-green-400" />
-                    <span className="text-sm font-medium">{item.text}</span>
-                  </motion.div>
-                ))}
-              </motion.div>
+                <Phone className="mr-2 h-5 w-5" />
+                Call (763) 344-1778
+              </Button>
             </motion.div>
           </div>
         </section>
 
-        {/* Services Section */}
-        <section className="py-20 bg-gradient-to-br from-gray-900 via-black to-gray-900">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <Image
-                src="/images/flower-dept-logo.png"
-                alt="Flower Dept Services"
-                width={200}
-                height={67}
-                className="h-10 w-auto mx-auto mb-6 opacity-80"
-              />
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Our Premium Services</h2>
-              <p className="text-gray-500 leading-relaxed">
-                We offer a wide range of cannabis products and services to meet your needs.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-gray-800 rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-semibold mb-2 text-white">24/7 Cannabis Delivery</h3>
-                <p className="text-gray-400">
-                  We provide fast and reliable cannabis delivery services around the clock.
-                </p>
-              </div>
-              <div className="bg-gray-800 rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-semibold mb-2 text-white">Premium Cannabis Products</h3>
-                <p className="text-gray-400">
-                  We offer a wide selection of high-quality cannabis products, including flowers, edibles, and
-                  concentrates.
-                </p>
-              </div>
-              <div className="bg-gray-800 rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-semibold mb-2 text-white">Discreet and Secure Delivery</h3>
-                <p className="text-gray-400">
-                  We ensure that all deliveries are discreet and secure to protect your privacy.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works Section */}
-        <section className="w-full py-20 md:py-32 bg-gray-900/50 relative overflow-hidden">
-          <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[linear-gradient(to_right,#065f46_1px,transparent_1px),linear-gradient(to_bottom,#065f46_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_40%,transparent_100%)]"></div>
-
-          <div className="container px-4 md:px-6 relative">
+        {/* Instagram CTA Section */}
+        <section className="py-16 px-6 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400">
+          <div className="container mx-auto max-w-4xl">
             <motion.div
+              className="flex flex-col md:flex-row items-center justify-between gap-8 text-white"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center space-y-4 text-center mb-16"
             >
-              <Badge className="rounded-full px-4 py-1.5 text-sm font-medium bg-green-600/20 text-green-400 border-green-500/30">
-                Cannabis Delivery Process
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-                How Cannabis Delivery Works in San Bernardino County
-              </h2>
-              <p className="max-w-[800px] text-gray-300 md:text-lg">
-                Get premium cannabis delivered to your door in San Bernardino, Rialto, Fontana, Colton, Highland in just
-                a few easy steps.
-              </p>
+              <div className="text-center md:text-left space-y-2">
+                <h3 className="text-2xl md:text-3xl font-bold">Follow us on Instagram</h3>
+                <p className="text-white/90 text-lg">Daily updates, new strains, and exclusive deals</p>
+              </div>
+              <a
+                href="https://www.instagram.com/flowerdeptsb/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform"
+              >
+                <Instagram className="h-6 w-6" />
+                @flowerdeptsb
+              </a>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* How It Works / Verification */}
+        <section className="py-24 lg:py-32 px-6 bg-black text-white">
+          <div className="container mx-auto max-w-6xl">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-sm font-semibold tracking-widest text-white/40 uppercase mb-4">Get Started</p>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">Three simple steps</h2>
             </motion.div>
 
-            <div className="grid md:grid-cols-4 gap-8 md:gap-12 relative">
-              <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-green-500/30 to-transparent -translate-y-1/2 z-0"></div>
-
+            <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
                   step: "01",
-                  title: "Call for Verification",
-                  description:
-                    "Call (763) 344-1778 to start your order. We'll guide you through our secure ID verification process.",
+                  title: "Call us",
+                  desc: "Reach out at (763) 344-1778 to start your first order.",
+                  icon: Phone,
                 },
                 {
                   step: "02",
-                  title: "Send ID & Selfie",
-                  description:
-                    "Text us a clear photo of your government ID and a selfie for age verification. Required for all new customers.",
+                  title: "Verify your ID",
+                  desc: "Text a photo of your ID and a selfie. Quick and secure.",
+                  icon: Shield,
                 },
                 {
                   step: "03",
-                  title: "Browse & Order",
-                  description:
-                    "Once verified, browse our premium selection and place your order over the phone with our expert staff.",
+                  title: "Get delivery",
+                  desc: "Once verified, your order is on the way. Fast and discreet.",
+                  icon: Clock,
                 },
-                {
-                  step: "04",
-                  title: "Fast Delivery",
-                  description: "Your order will be delivered quickly and discreetly to your door within 30-60 minutes.",
-                },
-              ].map((step, i) => (
+              ].map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
+                  className="relative p-8 rounded-2xl bg-white/5 border border-white/10"
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="relative z-10 flex flex-col items-center text-center space-y-4"
+                  transition={{ delay: i * 0.15 }}
                 >
-                  <motion.div
-                    className="flex h-16 w-16 items-center justify-center rounded-full bg-green-600/20 text-green-400 text-xl font-bold shadow-lg"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    {step.step}
-                  </motion.div>
-                  <h3 className="text-xl font-bold text-white">{step.title}</h3>
-                  <p className="text-gray-300">{step.description}</p>
+                  <div className="text-7xl font-bold text-white/5 absolute top-4 right-4">{item.step}</div>
+                  <div className="relative space-y-4">
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                      <item.icon className="h-6 w-6 text-black" />
+                    </div>
+                    <h3 className="text-2xl font-bold">{item.title}</h3>
+                    <p className="text-white/60 leading-relaxed">{item.desc}</p>
+                  </div>
                 </motion.div>
               ))}
             </div>
 
-            {/* ID verification requirements section */}
-
-            <section id="verification" className="py-20 bg-gray-800">
-              <div className="container mx-auto px-4">
-                <motion.div
-                  className="text-center max-w-4xl mx-auto"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <motion.div
-                    className="text-4xl mb-4"
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-                  >
-                    🆔
-                  </motion.div>
-                  <h3 className="text-2xl font-bold text-white mb-4">ID Verification Required</h3>
-                  <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-                    For your safety and legal compliance, all customers must complete our secure verification process
-                    before placing their first order.
-                  </p>
-                  <div className="grid md:grid-cols-2 gap-6 text-left">
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-white">Required Documents:</h4>
-                      <ul className="space-y-2 text-sm text-gray-300">
-                        <li className="flex items-center gap-2">
-                          <Check className="size-4 text-green-400" />
-                          Valid government-issued photo ID
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="size-4 text-green-400" />
-                          Clear selfie holding your ID
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="size-4 text-green-400" />
-                          Must be 21+ years old
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-white">Verification Process:</h4>
-                      <ol className="space-y-2 text-sm text-gray-300">
-                        <li className="flex items-start gap-2">
-                          <span className="bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">
-                            1
-                          </span>
-                          Call (763) 344-1778 to start verification
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">
-                            2
-                          </span>
-                          Text photos of ID & selfie to our secure line
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="bg-white text-black rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mt-0.5">
-                            3
-                          </span>
-                          Get approved & place your order
-                        </li>
-                      </ol>
-                    </div>
-                  </div>
-                  <motion.div className="mt-8" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button
-                      size="lg"
-                      className="rounded-full bg-white hover:bg-gray-200 text-black px-8 py-4 text-lg font-semibold"
-                      onClick={() => window.open("tel:+17633441778", "_self")}
-                    >
-                      <Phone className="mr-2 size-5" />
-                      Start Verification Process
-                    </Button>
-                  </motion.div>
-                </motion.div>
-              </div>
-            </section>
+            <motion.div
+              className="text-center mt-16"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              <Button
+                onClick={() => (window.location.href = "tel:+17633441778")}
+                className="bg-white text-black hover:bg-white/90 h-14 px-10 text-lg font-semibold rounded-full"
+              >
+                Start Verification
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </motion.div>
           </div>
         </section>
 
-        {/* Delivery Section */}
-        <section id="delivery" className="w-full py-20 md:py-32 bg-gray-900/50 relative overflow-hidden">
-          <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[linear-gradient(to_right,#065f46_1px,transparent_1px),linear-gradient(to_bottom,#065f46_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_40%,transparent_100%)]"></div>
-
-          <div className="container px-4 md:px-6 relative">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center space-y-4 text-center mb-16"
-            >
-              <Badge className="rounded-full px-4 py-1.5 text-sm font-medium bg-green-600/20 text-green-400 border-green-500/30">
-                Cannabis Delivery Areas
-              </Badge>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-                Cannabis Delivery San Bernardino, Rialto, Fontana, Colton, Highland - Fast & Discreet
-              </h2>
-              <p className="max-w-[800px] text-gray-300 md:text-lg">
-                We proudly serve San Bernardino County with premium cannabis delivery to San Bernardino, Rialto,
-                Fontana, Colton, Highland and surrounding Inland Empire cities.
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+        {/* Delivery Areas */}
+        <section className="py-24 lg:py-32 px-6">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                className="space-y-8 text-center lg:text-left"
+                initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col justify-center space-y-6"
               >
-                <h3 className="text-2xl font-bold text-white">Service Areas</h3>
-                <p className="text-gray-300">
-                  We deliver premium cannabis to the following cities in San Bernardino County:
+                <div>
+                  <p className="text-sm font-semibold tracking-widest text-black/40 uppercase mb-4">Delivery Areas</p>
+                  <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
+                    Serving San Bernardino County
+                  </h2>
+                </div>
+
+                <p className="text-xl text-black/60 leading-relaxed">
+                  Fast, reliable delivery to your door. Available 24/7 with average delivery times under 30 minutes.
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    { city: "San Bernardino", icon: "🏙️" },
-                    { city: "Rialto", icon: "🌆" },
-                    { city: "Fontana", icon: "🏘️" },
-                    { city: "Colton", icon: "🏡" },
-                    { city: "Highland", icon: "⛰️" },
-                  ].map((area, i) => (
+                <div className="space-y-3">
+                  {cities.map((city, i) => (
                     <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
+                      key={city}
+                      className="flex items-center gap-4 p-4 bg-black/[0.02] rounded-xl"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.3, delay: i * 0.1 }}
-                      whileHover={{ scale: 1.05, x: 5 }}
-                      className="flex items-center gap-3 p-4 bg-green-600/10 rounded-lg border border-green-500/20"
+                      transition={{ delay: i * 0.1 }}
                     >
-                      <span className="text-2xl">{area.icon}</span>
-                      <span className="text-white font-medium">{area.city}</span>
-                      <Check className="size-4 text-green-400 ml-auto" />
+                      <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center flex-shrink-0">
+                        <Check className="h-5 w-5 text-white" />
+                      </div>
+                      <span className="text-lg font-medium">{city}</span>
                     </motion.div>
                   ))}
                 </div>
 
-                <div className="space-y-3 pt-4 border-t border-green-500/20">
-                  <h4 className="font-semibold text-white">Delivery Information:</h4>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <Clock className="size-4 text-green-400" />
-                      <span className="text-gray-300">30-60 minute delivery time</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Shield className="size-4 text-green-400" />
-                      <span className="text-gray-300">Discreet and professional service</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Truck className="size-4 text-green-400" />
-                      <span className="text-gray-300">$50 minimum order for delivery</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="size-4 text-green-400" />
-                      <span className="text-gray-300">ID verification required</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    className="rounded-full bg-green-600 hover:bg-green-500 text-black font-semibold"
-                    onClick={() => window.open("tel:+17633441778", "_self")}
-                  >
-                    <Phone className="mr-2 size-4" />
-                    Call to Confirm Your Area
-                  </Button>
-                </motion.div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="relative"
-              >
-                <Image
-                  src="/san-bernardino-delivery-map.png"
-                  width={600}
-                  height={400}
-                  alt="Delivery Areas Map - San Bernardino County"
-                  className="rounded-xl shadow-lg border border-green-500/20"
-                />
-                <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-green-500/20"></div>
-                <motion.div
-                  className="absolute top-4 left-4 bg-black/80 backdrop-blur-sm rounded-lg p-3 border border-green-500/30"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3, duration: 0.5 }}
+                <Button
+                  onClick={() => (window.location.href = "tel:+17633441778")}
+                  className="bg-black text-white hover:bg-black/90 h-14 px-8 text-lg font-semibold rounded-full"
                 >
-                  <div className="text-green-400 font-semibold text-sm">📍 Service Areas</div>
-                  <div className="text-white text-xs">San Bernardino County</div>
-                </motion.div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="w-full py-20 md:py-32">
-          <div className="container px-4 md:px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
-            >
-              <Badge className="rounded-full px-4 py-1.5 text-sm font-medium bg-green-600/20 text-green-400 border-green-500/30">
-                Contact Cannabis Delivery
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-                Contact Flower Dept for Cannabis Delivery San Bernardino County
-              </h2>
-              <p className="max-w-[800px] text-gray-300 md:text-lg">
-                Call (763) 344-1778 now for same-day cannabis delivery in San Bernardino, Rialto, Fontana, Colton,
-                Highland. Premium cannabis products and fast delivery services available 24/7.
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col justify-center space-y-4"
-              >
-                <h3 className="text-2xl font-bold text-white">Contact Information</h3>
-                <p className="text-gray-300">
-                  Call or text us to place your order or inquire about our products and services.
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <Phone className="size-4 text-green-400" />
-                    <span
-                      className="text-gray-300 cursor-pointer hover:text-green-300 transition-colors"
-                      onClick={() => window.open("tel:+17633441778", "_self")}
-                    >
-                      (763) 344-1778
-                    </span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Clock className="size-4 text-green-400" />
-                    <span className="text-gray-300">24/7 Available</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Truck className="size-4 text-green-400" />
-                    <span className="text-gray-300">Fast & Discreet Delivery</span>
-                  </li>
-                </ul>
+                  <MapPin className="mr-2 h-5 w-5" />
+                  Check Your Area
+                </Button>
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
+                className="relative"
+                initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col justify-center space-y-6"
               >
-                <div className="text-center p-8 bg-gradient-to-br from-green-600/20 to-green-800/20 rounded-xl border border-green-500/30">
-                  <motion.div animate={pulseAnimation} className="mb-4">
-                    <div
-                      className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2 cursor-pointer hover:text-yellow-300 transition-colors"
-                      onClick={() => window.open("tel:+17633441778", "_self")}
-                    >
-                      📞 (763) 344-1778
-                    </div>
-                    <div className="text-lg text-green-300">Call or Text for Instant Service</div>
-                  </motion.div>
-                  <p className="text-gray-300 mb-6">
-                    Ready to place your order? Our friendly team is standing by 24/7 to help you with premium cannabis
-                    delivery.
-                  </p>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button
-                      className="rounded-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold px-8 py-3"
-                      onClick={() => window.open("tel:+17633441778", "_self")}
-                    >
-                      <Phone className="mr-2 size-4" />
-                      Call Now
-                    </Button>
-                  </motion.div>
+                <div className="aspect-square bg-black/[0.02] rounded-3xl flex items-center justify-center border-2 border-dashed border-black/10">
+                  <div className="text-center p-8">
+                    <MapPin className="h-16 w-16 mx-auto text-black/20 mb-4" />
+                    <p className="text-2xl font-bold">San Bernardino County</p>
+                    <p className="text-black/50 mt-2">Premium delivery service</p>
+                  </div>
                 </div>
               </motion.div>
             </div>
           </div>
         </section>
 
-        {/* FAQ Section */}
-        <section id="faq" className="w-full py-20 md:py-32">
-          <div className="container px-4 md:px-6">
+        {/* Final CTA */}
+        <section className="py-24 lg:py-32 px-6 bg-black text-white">
+          <div className="container mx-auto max-w-4xl text-center">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              className="space-y-8"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
             >
-              <Badge className="rounded-full px-4 py-1.5 text-sm font-medium bg-green-600/20 text-green-400 border-green-500/30">
-                Cannabis Delivery FAQ
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-                Cannabis Delivery San Bernardino County - Frequently Asked Questions
-              </h2>
-              <p className="max-w-[800px] text-gray-300 md:text-lg">
-                Find answers to common questions about our cannabis delivery service in San Bernardino, Rialto, Fontana,
-                Colton, Highland and surrounding areas.
+              <Image
+                src="/images/flower-dept-logo.png"
+                alt="Flower Dept"
+                width={200}
+                height={66}
+                className="h-16 w-auto mx-auto invert"
+              />
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">Ready to order?</h2>
+              <p className="text-xl text-white/60 max-w-xl mx-auto">
+                Call now for same-day delivery. New customers get verified in minutes.
               </p>
-            </motion.div>
-
-            <div className="mx-auto max-w-3xl">
-              <Accordion type="single" collapsible className="w-full">
-                {[
-                  {
-                    question: "What areas do you deliver cannabis to in San Bernardino County?",
-                    answer:
-                      "We deliver premium cannabis to San Bernardino, Rialto, Fontana, Colton, Highland and surrounding areas in San Bernardino County. Call (763) 344-1778 to confirm cannabis delivery to your specific location.",
-                  },
-                  {
-                    question: "How fast is cannabis delivery in San Bernardino?",
-                    answer:
-                      "We offer same-day cannabis delivery within 30-60 minutes in our San Bernardino County service areas. We're available 24/7 for your cannabis delivery needs.",
-                  },
-                  {
-                    question: "What is the minimum order for cannabis delivery?",
-                    answer:
-                      "There is a $50 minimum order amount for cannabis delivery in San Bernardino County. We accept cash, debit cards, and credit cards for cannabis purchases.",
-                  },
-                  {
-                    question: "Do I need ID for cannabis delivery in California?",
-                    answer:
-                      "Yes, you must be 21+ and present valid government-issued ID for cannabis delivery. New customers must complete our secure verification process by texting ID photos to (763) 344-1778.",
-                  },
-                  {
-                    question: "How do I place a cannabis delivery order in San Bernardino?",
-                    answer:
-                      "You can place a cannabis delivery order by calling or texting us at (763) 344-1778. Our cannabis experts will help you select the perfect products for delivery.",
-                  },
-                  {
-                    question: "What cannabis products do you deliver in San Bernardino County?",
-                    answer:
-                      "We deliver premium cannabis flowers, concentrates, edibles, and other cannabis products throughout San Bernardino County. Call (763) 344-1778 to learn about our current cannabis menu.",
-                  },
-                ].map((faq, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: i * 0.05 }}
-                  >
-                    <AccordionItem value={`item-${i}`} className="border-b border-green-500/20 py-2">
-                      <AccordionTrigger className="text-left font-medium text-white hover:no-underline">
-                        {faq.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-gray-300">{faq.answer}</AccordionContent>
-                    </AccordionItem>
-                  </motion.div>
-                ))}
-              </Accordion>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-gray-800 border-t border-gray-700">
-          <div className="container mx-auto px-4">
-            <motion.div
-              className="text-center max-w-4xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <motion.h2
-                className="text-3xl font-bold text-white mb-4 sm:text-4xl"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: 0.4 }}
-              >
-                Ready to Order Premium Cannabis?
-              </motion.h2>
-              <motion.p
-                className="text-xl text-gray-300 mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.4 }}
-              >
-                Call now for fast, discreet delivery to your door in San Bernardino County
-              </motion.p>
-
-              <motion.div
-                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-              >
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="lg"
-                    className="rounded-full h-14 px-8 text-lg bg-white hover:bg-gray-200 text-black font-bold"
-                    onClick={() => window.open("tel:+17633441778", "_self")}
-                  >
-                    <Phone className="mr-2 size-5" />
-                    Call/Text Now
-                    <ArrowRight className="ml-2 size-5" />
-                  </Button>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="rounded-full h-14 px-8 text-lg bg-transparent border-2 border-white text-white hover:bg-white hover:text-black"
-                  >
-                    🌿 Browse Menu
-                  </Button>
-                </motion.div>
-              </motion.div>
-
-              <motion.p
-                className="text-sm text-gray-400 mt-4"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6, duration: 0.4 }}
-              >
-                21+ only. ID required. Licensed delivery areas only.
-              </motion.p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <Button
+                  onClick={() => (window.location.href = "tel:+17633441778")}
+                  className="bg-white text-black hover:bg-white/90 h-16 px-12 text-xl font-bold rounded-full shadow-lg shadow-white/30 w-full sm:w-auto"
+                  size="lg"
+                >
+                  <Phone className="mr-3 h-6 w-6 animate-pulse" />
+                  (763) 344-1778
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-2 border-white text-white hover:bg-white hover:text-black h-16 px-10 text-lg font-semibold rounded-full transition-all bg-transparent"
+                  size="lg"
+                >
+                  <a href="https://www.instagram.com/flowerdeptsb/" target="_blank" rel="noopener noreferrer">
+                    <Instagram className="mr-2 h-5 w-5" />
+                    Follow @flowerdeptsb
+                  </a>
+                </Button>
+              </div>
             </motion.div>
           </div>
         </section>
       </main>
 
-      <footer className="bg-black text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="md:col-span-2">
-              <Image
-                src="/images/flower-dept-logo.png"
-                alt="Flower Dept Cannabis Delivery"
-                width={200}
-                height={67}
-                className="h-10 w-auto mb-4 brightness-0 invert"
-              />
-              <p className="text-gray-400 mb-4">
-                Premium cannabis delivery service in San Bernardino County. Licensed, secure, and professional.
-              </p>
-              <p className="text-gray-500">© {new Date().getFullYear()} Flower Dept. All rights reserved.</p>
+      {/* Footer */}
+      <footer className="border-t border-black/10 py-12 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col items-center gap-8">
+            <Image
+              src="/images/flower-dept-logo.png"
+              alt="Flower Dept"
+              width={160}
+              height={53}
+              className="h-12 w-auto"
+            />
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <a
+                href="tel:+17633441778"
+                className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full font-bold hover:bg-black/80 transition-colors"
+              >
+                <Phone className="h-5 w-5" />
+                (763) 344-1778
+              </a>
+              <a
+                href="https://www.instagram.com/flowerdeptsb/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 border-2 border-black px-6 py-3 rounded-full font-bold hover:bg-black hover:text-white transition-all"
+              >
+                <Instagram className="h-5 w-5" />
+                @flowerdeptsb
+              </a>
             </div>
-
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Daily Specials</h4>
-              <ul className="text-gray-400 space-y-1">
-                {dailySpecials.slice(0, 4).map((special) => (
-                  <li key={special.day} className="text-sm">
-                    <span className="font-medium">{special.day}:</span> {special.special} - {special.price}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Contact</h4>
-              <ul className="text-gray-400">
-                <li className="mb-2">
-                  <button
-                    onClick={() => window.open("tel:+17633441778", "_self")}
-                    className="hover:text-white transition-colors"
-                  >
-                    Phone: (763) 344-1778
-                  </button>
-                </li>
-                <li>Email: support@flowerdept.com</li>
-              </ul>
-            </div>
+            <p className="text-sm text-black/50 text-center">
+              Licensed cannabis delivery in San Bernardino County. Must be 21+ with valid ID.
+            </p>
           </div>
         </div>
       </footer>
+
+      {/* Floating Action Buttons */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        <motion.a
+          href="https://www.instagram.com/flowerdeptsb/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.5 }}
+          whileHover={{ scale: 1.1 }}
+        >
+          <Instagram className="h-6 w-6" />
+        </motion.a>
+        <motion.a
+          href="tel:+17633441778"
+          className="bg-black text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.3 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Phone className="h-6 w-6" />
+        </motion.a>
+      </div>
     </div>
   )
 }
