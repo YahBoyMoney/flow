@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flower Dept — #1 Cannabis Delivery San Bernardino, Rialto, Fontana</title>
+<meta name="description" content="Premium cannabis delivered in 30 minutes across San Bernardino, Rialto, Fontana, Colton and Highland. New deal every day. Text (909) 619-8423. $40 minimum.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#070807; --ink:#0d0f0d; --panel:#101310;
+  --green:#39ff6a; --green-dim:#1d7a3c;
+  --bone:#f2f0ea; --grey:#8a8f8a; --line:rgba(242,240,234,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{background:var(--black);color:var(--bone);font-family:'Archivo',sans-serif;overflow-x:hidden}
+::selection{background:var(--green);color:var(--black)}
+img{max-width:100%;display:block}
+a{color:inherit}
+.container{max-width:1280px;margin:0 auto;padding:0 28px}
+h1,h2,h3,.big{font-family:'Archivo Black';text-transform:uppercase;line-height:.95}
+.section-label{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--green)}
+.section-label::before{content:'';width:34px;height:1px;background:var(--green)}
+
+/* grain overlay */
+body::after{content:'';position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* hero film montage */
+.hero-film{position:absolute;inset:0;z-index:-1}
+.hero-film video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.07);transition:opacity 1.1s ease,transform 6s ease}
+.hero-film video.active{opacity:1;transform:scale(1)}
+.hero-chapter{margin-top:34px;display:inline-flex;align-items:center;gap:14px;padding:12px 20px;border:1px solid rgba(242,240,234,.16);border-radius:999px;background:rgba(7,8,7,.45);backdrop-filter:blur(8px)}
+.hero-chapter span{font-size:10px;font-weight:800;letter-spacing:.3em;color:var(--green)}
+.hero-chapter b{font-size:13px;font-weight:600;color:var(--bone);white-space:nowrap}
+
+/* verify */
+.verify{padding:120px 0;background:var(--black);position:relative}
+.verify h2{font-size:clamp(36px,5.5vw,76px);margin-top:16px}
+.verify h2 span{color:var(--green)}
+.verify .v-sub{margin-top:14px;color:var(--grey);font-size:16px;max-width:560px}
+.v-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+.v-step{background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:28px 24px;position:relative}
+.v-step .vnum{font-family:'Archivo Black';font-size:44px;color:transparent;-webkit-text-stroke:1.5px rgba(57,255,106,.55);line-height:1}
+.v-step h3{margin-top:14px;font-size:19px;font-weight:800;color:var(--bone)}
+.v-step p{margin-top:8px;color:var(--grey);font-size:14px;line-height:1.55}
+.v-actions{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap}
+.v-note{margin-top:22px;color:#7d7b74;font-size:12.5px;max-width:560px;line-height:1.6}
+
+
+/* instagram buttons */
+.cta-ig{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;font-weight:800;font-size:15px;color:#fff;background:linear-gradient(45deg,#f9ce34,#ee2a7b 45%,#6228d7);box-shadow:0 8px 28px rgba(238,42,123,.35);transition:transform .2s}
+.cta-ig:hover{transform:translateY(-2px)}
+.cta-ig svg{flex:none}
+.nav-ig{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;color:var(--bone);background:linear-gradient(45deg,#f9ce34,#ee2a7b 45%,#6228d7);margin-right:10px}
+.nav-ig svg{width:20px;height:20px;color:#fff}
+.nav{display:flex;align-items:center}
+.nav .nav-logo{margin-right:auto}
+
+/* instagram */
+.insta{padding:120px 0;background:var(--ink);text-align:center}
+.insta .handle{font-family:'Archivo Black';font-size:clamp(30px,5.5vw,72px);text-transform:uppercase;color:var(--bone);display:block;text-decoration:none;margin-top:18px}
+.insta .handle span{color:var(--green)}
+.insta p{margin-top:14px;color:var(--grey);font-size:16px}
+.insta .ig-btn{display:inline-flex;align-items:center;gap:10px;margin-top:30px;font-weight:800;font-size:15px;letter-spacing:.05em;color:var(--black);background:linear-gradient(90deg,var(--green),#8dffab);padding:17px 34px;border-radius:999px;text-decoration:none;box-shadow:0 0 40px rgba(57,255,106,.25)}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:14px 24px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(7,8,7,.88);backdrop-filter:blur(12px);border-bottom-color:var(--line)}
+.nav-logo img{height:44px;width:auto}
+.nav-cta{font-weight:800;font-size:13px;letter-spacing:.06em;color:var(--black);background:var(--green);padding:12px 22px;border-radius:999px;text-decoration:none;white-space:nowrap}
+
+/* ticker */
+.ticker{position:fixed;top:72px;left:0;right:0;z-index:49;border-top:1px solid rgba(57,255,106,.22);border-bottom:1px solid rgba(57,255,106,.22);background:rgba(7,8,7,.7);backdrop-filter:blur(6px);padding:8px 0;overflow:hidden;white-space:nowrap}
+.ticker-track{display:inline-flex;gap:0;will-change:transform;animation:crawl 22s linear infinite}
+.ticker-track span{font-weight:700;font-size:11px;letter-spacing:.24em;color:var(--green);text-transform:uppercase;padding-right:48px}
+@keyframes crawl{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+
+/* hero */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(7,8,7,.6) 0%,rgba(7,8,7,.1) 45%,rgba(7,8,7,.94) 90%,var(--black) 100%)}
+.hero-content{position:relative;z-index:1;padding:170px 28px 96px;max-width:1280px;margin:0 auto;width:100%}
+.hero-logo{width:min(280px,60vw);margin-bottom:26px}
+.hero h1{font-size:clamp(50px,9vw,140px);letter-spacing:-.01em}
+.hero h1 .line{display:block;overflow:hidden}
+.hero h1 .hollow{color:transparent;-webkit-text-stroke:2px var(--bone)}
+.hero h1 .green{color:var(--green)}
+.hero-sub{margin-top:20px;font-size:clamp(15px,1.5vw,19px);color:#d9d7d0;max-width:540px;line-height:1.6;text-shadow:0 2px 14px rgba(7,8,7,.9),0 0 3px rgba(7,8,7,.8)}
+.hero-sub strong{color:var(--bone)}
+.cta-row{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;align-items:center}
+.cta-main{font-weight:800;font-size:16px;letter-spacing:.04em;color:var(--black);background:var(--green);padding:18px 36px;border-radius:999px;text-decoration:none;box-shadow:0 0 44px rgba(57,255,106,.32)}
+.cta-ghost{font-weight:600;font-size:15px;color:var(--bone);border:1px solid rgba(242,240,234,.3);padding:17px 30px;border-radius:999px;text-decoration:none}
+.badges{display:flex;gap:24px;margin-top:40px;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);display:flex;align-items:center;gap:8px}
+.badge::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;flex-shrink:0}
+
+/* today's deal */
+.today{position:relative;padding:120px 0;background:var(--black)}
+.today-card{margin-top:36px;position:relative;border:1px solid rgba(57,255,106,.35);border-radius:24px;background:radial-gradient(120% 160% at 0% 0%,rgba(57,255,106,.10) 0%,rgba(7,8,7,0) 55%),var(--panel);padding:clamp(28px,5vw,64px);display:grid;grid-template-columns:1.2fr .8fr;gap:32px;align-items:center;overflow:hidden}
+.today-card .day-tag{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.26em;color:var(--black);background:var(--green);padding:7px 16px;border-radius:999px;margin-bottom:18px;text-transform:uppercase}
+.today-card h2{font-size:clamp(36px,5.5vw,76px)}
+.today-card .deal-desc{margin-top:12px;color:var(--grey);font-size:17px}
+.today-price{text-align:right}
+.today-price .price{font-family:'Archivo Black';font-size:clamp(56px,8vw,120px);color:var(--green);line-height:1}
+.today-price .min{margin-top:10px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+.countdown{margin-top:26px;display:flex;gap:10px;font-variant-numeric:tabular-nums}
+.countdown div{border:1px solid var(--line);border-radius:12px;padding:10px 14px;text-align:center;min-width:72px}
+.countdown b{display:block;font-family:'Archivo Black';font-size:26px;color:var(--bone)}
+.countdown small{font-size:10px;letter-spacing:.18em;color:var(--grey);text-transform:uppercase}
+
+/* offer showcase — pinned horizontal */
+.offer{position:relative;background:var(--black)}
+.offer-head{padding:110px 0 40px}
+.offer-head h2{font-size:clamp(38px,6vw,86px);margin-top:16px}
+.offer-head h2 span{color:var(--green)}
+.rail-wrap{position:relative;overflow:hidden}
+.rail{display:flex;gap:22px;padding:0 28px 60px;will-change:transform}
+.panel{position:relative;flex:0 0 min(78vw,560px);height:min(66vh,600px);border-radius:22px;overflow:hidden;border:1px solid var(--line);background:var(--panel)}
+.panel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.08);will-change:transform}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,8,7,0) 30%,rgba(7,8,7,.9) 100%)}
+.panel-text{position:absolute;left:26px;right:26px;bottom:24px;z-index:2}
+.panel-text .num{font-family:'Archivo Black';font-size:13px;color:var(--green);letter-spacing:.24em;margin-bottom:8px}
+.panel-text h3{font-size:clamp(24px,3vw,38px)}
+.panel-text p{margin-top:8px;color:#c9c7c0;font-size:15px;line-height:1.55}
+
+/* weekly deals */
+.weekly{padding:120px 0;background:var(--ink)}
+.weekly h2{font-size:clamp(38px,6vw,86px);margin-top:16px}
+.deal-grid{margin-top:48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.deal{position:relative;border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:26px 24px;overflow:hidden;transition:border-color .25s}
+.deal:hover{border-color:rgba(57,255,106,.5)}
+.deal .dow{font-size:11px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:var(--grey)}
+.deal h3{font-size:24px;margin-top:12px}
+.deal .what{margin-top:6px;color:var(--grey);font-size:14px}
+.deal .price{margin-top:16px;font-family:'Archivo Black';font-size:34px;color:var(--green)}
+.deal.today-hl{border-color:var(--green);background:radial-gradient(140% 140% at 50% 0%,rgba(57,255,106,.13) 0%,var(--panel) 60%)}
+.deal.today-hl::before{content:'TODAY';position:absolute;top:14px;right:14px;font-family:'Archivo Black';font-size:10px;letter-spacing:.2em;color:var(--black);background:var(--green);padding:5px 10px;border-radius:999px}
+.deal.cta-tile{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px;background:var(--green);border-color:var(--green);text-decoration:none}
+.deal.cta-tile h3{color:var(--black);font-size:26px}
+.deal.cta-tile span{font-weight:800;font-size:14px;letter-spacing:.06em;color:var(--green);background:var(--black);padding:12px 22px;border-radius:999px}
+
+/* steps */
+.steps{padding:120px 0;background:var(--black);position:relative}
+.steps h2{font-size:clamp(38px,6vw,86px);margin-top:16px}
+.steps-list{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.step{border-top:1px solid var(--line);padding-top:24px;position:relative}
+.step .n{font-family:'Archivo Black';font-size:clamp(48px,6vw,84px);color:transparent;-webkit-text-stroke:1.5px rgba(57,255,106,.75);line-height:1}
+.step h3{font-size:22px;margin-top:16px}
+.step p{margin-top:10px;color:var(--grey);font-size:15px;line-height:1.6}
+
+/* cities marquee */
+.cities{padding:110px 0;background:var(--ink);overflow:hidden}
+.cities .big-marquee{white-space:nowrap;font-family:'Archivo Black';font-size:clamp(56px,10vw,150px);text-transform:uppercase;line-height:1.05;will-change:transform}
+.cities .row-a{color:transparent;-webkit-text-stroke:1.5px rgba(242,240,234,.5)}
+.cities .row-b{color:var(--green);margin-top:6px}
+.cities-stats{margin-top:64px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+.stat b{display:block;font-family:'Archivo Black';font-size:clamp(34px,4.5vw,62px);color:var(--bone)}
+.stat span{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--grey)}
+
+/* final cta */
+.final{position:relative;padding:140px 0;isolation:isolate;overflow:hidden;text-align:center}
+.final-bg{position:absolute;inset:-25% 0;z-index:-1;background:url('assets/delivery-night.png') center/cover no-repeat;will-change:transform}
+.final::before{content:'';position:absolute;inset:0;z-index:0;background:rgba(7,8,7,.82)}
+.final .container{position:relative;z-index:1}
+.final img.f-logo{width:min(300px,70vw);margin:0 auto 30px}
+.final h2{font-size:clamp(40px,6.5vw,96px)}
+.final h2 span{color:var(--green)}
+.final p{margin-top:18px;color:#c9c7c0;font-size:17px}
+.final .cta-row{justify-content:center}
+.social{margin-top:26px;font-weight:700;letter-spacing:.08em;color:var(--bone);text-decoration:none;border-bottom:2px solid var(--green);padding-bottom:2px}
+footer{padding:34px 0;border-top:1px solid var(--line);background:var(--black)}
+footer .container{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer img{height:34px}
+footer p{font-size:12px;color:var(--grey)}
+
+/* mobile call bar */
+.callbar{position:fixed;left:14px;right:14px;bottom:14px;z-index:55;display:none}
+.callbar a{display:block;text-align:center;font-weight:800;font-size:16px;letter-spacing:.05em;color:var(--black);background:var(--green);padding:17px;border-radius:999px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+@media(max-width:760px){
+  .callbar{display:block}
+  .v-steps{grid-template-columns:1fr}
+  .hero-logo{display:none}
+  .hero-content{padding:150px 20px 90px}
+  .hero::before{background:linear-gradient(180deg,rgba(7,8,7,.72) 0%,rgba(7,8,7,.35) 45%,rgba(7,8,7,.96) 88%,var(--black) 100%)}
+  .today-card{grid-template-columns:1fr}
+  .today-price{text-align:left}
+  .steps-list{grid-template-columns:1fr}
+  .cities-stats{grid-template-columns:repeat(2,1fr)}
+  .nav-cta{display:none}
+  body{padding-bottom:70px}
+}
+/* reveal default states: visible without JS; JS animates from hidden */
+.reveal{opacity:1}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="#top"><img src="assets/logo-white.png" alt="Flower Dept"></a>
+  <a class="nav-ig" href="https://instagram.com/flowerdeptsb" target="_blank" rel="noopener" aria-label="Flower Dept on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg></a>
+  <a class="nav-cta" href="sms:+19096198423?&body=Hey%20Flower%20Dept%2C%20I%20want%20to%20order.">Text (909) 619-8423</a>
+</nav>
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<section class="hero" id="top">
+  <div class="hero-film" aria-hidden="true">
+    <video id="fv1" class="active" src="film/ch1.mp4" poster="film/ch1-poster.jpg" muted playsinline preload="auto"></video>
+    <video id="fv2" src="film/ch2.mp4" poster="film/ch2-poster.jpg" muted playsinline preload="auto"></video>
+    <video id="fv3" src="film/ch3.mp4" poster="film/ch3-poster.jpg" muted playsinline preload="auto"></video>
+    <video id="fv4" src="film/ch4.mp4" poster="film/ch4-poster.jpg" muted playsinline preload="auto"></video>
+  </div>
+  <div class="hero-content">
+    <h1>
+      <span class="line"><span class="lw">THE PLUG</span></span>
+      <span class="line"><span class="lw hollow">LEVELED</span> <span class="lw green">UP</span></span>
+    </h1>
+    <p class="hero-sub reveal"><strong>Premium flower at your door in 30 minutes.</strong> Lab tested, discreet, and a new deal every day of the week.</p>
+    <div class="cta-row reveal">
+      <a class="cta-main" href="sms:+19096198423?&body=Hey%20Flower%20Dept%2C%20I%20want%20to%20order.">Text to Order</a>
+      <a class="cta-ig" href="https://instagram.com/flowerdeptsb" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>Follow @flowerdeptsb</a>
+    </div>
+    <div class="hero-chapter reveal"><span id="hcKick">THE GROW</span><b id="hcText">Grown right</b></div>
+  </div>
+</section>
+
+<section class="today" id="today">
+  <div class="container">
+    <span class="section-label">Today Only</span>
+    <div class="today-card reveal" id="todayCard">
+      <div>
+        <span class="day-tag" id="todayTag">Today</span>
+        <h2 id="todayName">—</h2>
+        <p class="deal-desc" id="todayDesc">—</p>
+        <div class="countdown" id="countdown">
+          <div><b id="ch">00</b><small>hrs</small></div>
+          <div><b id="cm">00</b><small>min</small></div>
+          <div><b id="cs">00</b><small>sec</small></div>
+        </div>
+      </div>
+      <div class="today-price">
+        <div class="price" id="todayPrice">—</div>
+        <div class="min">$40 minimum · Text (909) 619-8423</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="offer" id="offer">
+  <div class="container offer-head">
+    <span class="section-label">What We Got</span>
+    <h2>BUILT FOR THE<br><span>WHOLE CITY</span></h2>
+  </div>
+  <div class="rail-wrap" id="railWrap">
+    <div class="rail" id="rail">
+      <div class="panel">
+        <img src="assets/deal-jars.png" alt="Jars of premium flower">
+        <div class="panel-text">
+          <div class="num">01 / FLOWER</div>
+          <h3>Top-shelf every tier</h3>
+          <p>From $5 gram days to premium ounces, every jar is lab tested and hand picked.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <img src="assets/scale-shot.png" alt="Flower on the scale">
+        <div class="panel-text">
+          <div class="num">02 / WEIGHT</div>
+          <h3>Real weight, real deals</h3>
+          <p>7g for $20. Half O for $50. Ounce for $100. The math works every day of the week.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <img src="assets/delivery-night.png" alt="Night delivery through the city">
+        <div class="panel-text">
+          <div class="num">03 / DELIVERY</div>
+          <h3>30 minutes, any night</h3>
+          <p>San Bernardino, Rialto, Fontana, Colton, Highland. Discreet drop at your door.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <img src="assets/hero-bud-v1.png" alt="Macro flower detail">
+        <div class="panel-text">
+          <div class="num">04 / QUALITY</div>
+          <h3>Frost you can see</h3>
+          <p>Lab tested, properly cured, packed fresh. 500+ verified customers already know.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="weekly" id="deals">
+  <div class="container">
+    <span class="section-label">Save Every Day</span>
+    <h2>WEEKLY SPECIALS</h2>
+    <div class="deal-grid" id="dealGrid"></div>
+  </div>
+</section>
+
+<section class="steps">
+  <div class="container">
+    <span class="section-label">Easy Process</span>
+    <h2>ORDER IN 3 STEPS</h2>
+    <div class="steps-list">
+      <div class="step reveal"><div class="n">01</div><h3>Text us</h3><p>Text (909) 619-8423 and tell us what you want. $40 minimum on all orders.</p></div>
+      <div class="step reveal"><div class="n">02</div><h3>Verify once</h3><p>Text a photo of your ID and a selfie. New customers verified in minutes.</p></div>
+      <div class="step reveal"><div class="n">03</div><h3>Get delivery</h3><p>Sit back. Your order pulls up in 30 minutes or less, packaged discreet.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cities">
+  <div class="big-marquee row-a" data-marquee="-1">SAN BERNARDINO · RIALTO · FONTANA · COLTON · HIGHLAND · SAN BERNARDINO · RIALTO · FONTANA · COLTON · HIGHLAND ·&nbsp;</div>
+  <div class="big-marquee row-b" data-marquee="1">30 MIN DELIVERY · 30 MIN DELIVERY · 30 MIN DELIVERY · 30 MIN DELIVERY · 30 MIN DELIVERY ·&nbsp;</div>
+  <div class="container">
+    <div class="cities-stats">
+      <div class="stat reveal"><b data-count="30">0</b><span>Min avg delivery</span></div>
+      <div class="stat reveal"><b data-count="5">0</b><span>Cities served</span></div>
+      <div class="stat reveal"><b data-count="500" data-suffix="+">0</b><span>Happy customers</span></div>
+      <div class="stat reveal"><b data-count="40" data-prefix="$">0</b><span>Minimum order</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="verify" id="verify">
+  <div class="container">
+    <span class="section-label">New Patients</span>
+    <h2>GET <span>VERIFIED</span></h2>
+    <p class="v-sub">One-time verification unlocks the full menu, member pricing and first look at new drops. Takes two minutes.</p>
+    <div class="v-steps">
+      <div class="v-step reveal"><span class="vnum">01</span><h3>Snap your ID</h3><p>Front and back of your government-issued ID. 21+ only.</p></div>
+      <div class="v-step reveal"><span class="vnum">02</span><h3>Add a selfie</h3><p>One clear selfie so we can match you to your ID. Add your IG handle if you want updates there too.</p></div>
+      <div class="v-step reveal"><span class="vnum">03</span><h3>Text it in</h3><p>Send all three to <b style="color:var(--bone)">(909) 619-8423</b>. We confirm you back with the menu, usually same day.</p></div>
+    </div>
+    <div class="v-actions reveal">
+      <a class="cta-main" href="sms:+19096198423?&body=New%20patient%20verification%20%E2%80%94%20ID%20front%2Fback%20%2B%20selfie%20attached.%20IG%3A%20">Start Verification</a>
+      <a class="cta-ig" href="https://instagram.com/flowerdeptsb" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>DM us on IG</a>
+    </div>
+    <p class="v-note">Your info is used once, for age and identity verification only. Never shared, never posted. Must be 21+.</p>
+  </div>
+</section>
+
+<section class="insta">
+  <div class="container">
+    <span class="section-label" style="justify-content:center">Follow the Dept</span>
+    <a class="handle" href="https://instagram.com/flowerdeptsb" target="_blank" rel="noopener">@FLOWER<span>DEPTSB</span></a>
+    <p>Daily deals, new drops and menu updates hit Instagram first.</p>
+    <a class="ig-btn" href="https://instagram.com/flowerdeptsb" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>Follow on Instagram</a>
+  </div>
+</section>
+
+<section class="final">
+  <div class="final-bg" data-parallax="0.2"></div>
+  <div class="container">
+    <img class="f-logo reveal" src="assets/logo-green.png" alt="Flower Dept">
+    <h2 class="reveal">READY TO <span>ORDER?</span></h2>
+    <p class="reveal">Text us for same-day delivery. New customers verified in minutes.</p>
+    <div class="cta-row reveal">
+      <a class="cta-main" href="sms:+19096198423?&body=Hey%20Flower%20Dept%2C%20I%20want%20to%20order.">Text (909) 619-8423</a>
+      <a class="cta-ghost" href="https://instagram.com/flowerdeptsb" target="_blank" rel="noopener">@flowerdeptsb</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <img src="assets/logo-white.png" alt="Flower Dept">
+    <p>Flower Dept · San Bernardino County · (909) 619-8423 · @flowerdeptsb</p>
+  </div>
+</footer>
+
+<div class="callbar"><a href="sms:+19096198423?&body=Hey%20Flower%20Dept%2C%20I%20want%20to%20order.">Text to Order (909) 619-8423</a></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+const DEALS=[
+ {d:'Sunday',n:'Sunday Stash',w:'7g for $20 or Half O for $50',p:'From $20'},
+ {d:'Monday',n:'$5 Gram Madness',w:'Everything $5 a gram',p:'$5/g'},
+ {d:'Tuesday',n:'7g Tuesday',w:'A quarter for a Jackson',p:'$20'},
+ {d:'Wednesday',n:'Half Zip Wednesday',w:'Half ounce, half price energy',p:'$50'},
+ {d:'Thursday',n:'Ten Sack Thursday',w:'10 grams for fifty',p:'$50'},
+ {d:'Friday',n:'Fat O Friday',w:'Full ounce Friday',p:'$100'},
+ {d:'Saturday',n:'Top Shelf Saturday',w:'Premium ounce, top of the shelf',p:'$120'}
+];
+const now=new Date();
+const dow=now.getDay();
+const t=DEALS[dow];
+// today card
+document.getElementById('todayTag').textContent=t.d;
+document.getElementById('todayName').textContent=t.n;
+document.getElementById('todayDesc').textContent=t.w;
+document.getElementById('todayPrice').textContent=t.p;
+// ticker
+const tickTxt=`${t.n} — ${t.w} · $40 minimum all orders · 30 min delivery · Text (909) 619-8423 · `;
+document.getElementById('tickerTrack').innerHTML=`<span>${tickTxt.repeat(3)}</span><span>${tickTxt.repeat(3)}</span>`;
+// deal grid
+document.getElementById('dealGrid').innerHTML=DEALS.map((x,i)=>
+ `<div class="deal${i===dow?' today-hl':''}"><div class="dow">${x.d}</div><h3>${x.n}</h3><div class="what">${x.w}</div><div class="price">${x.p}</div></div>`).join('')
+ +`<a class="deal cta-tile" href="sms:+19096198423?&body=Hey%20Flower%20Dept%2C%20I%20want%20to%20order."><h3>Ready when you are</h3><span>Text (909) 619-8423</span></a>`;
+// countdown to midnight
+function tick(){
+  const n=new Date(); const end=new Date(n); end.setHours(24,0,0,0);
+  let s=Math.max(0,Math.floor((end-n)/1000));
+  const h=Math.floor(s/3600), m=Math.floor(s%3600/60), sec=s%60;
+  ch.textContent=String(h).padStart(2,'0'); cm.textContent=String(m).padStart(2,'0'); cs.textContent=String(sec).padStart(2,'0');
+}
+const ch=document.getElementById('ch'),cm=document.getElementById('cm'),cs=document.getElementById('cs');
+tick(); setInterval(tick,1000);
+// nav bg
+addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>40),{passive:true});
+
+/* motion — fail open: everything already visible without JS */
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(window.gsap && !reduced){
+  gsap.registerPlugin(ScrollTrigger);
+  // hero headline lines rise in
+  gsap.from('.hero h1 .lw',{yPercent:110,duration:1.05,ease:'power4.out',stagger:.12,delay:.15});
+  gsap.from('.hero .hero-logo',{autoAlpha:0,y:24,duration:.9,ease:'power3.out'});
+  gsap.from(['.hero-sub','.hero .cta-row','.hero .badges'],{autoAlpha:0,y:26,duration:.8,stagger:.1,delay:.5,ease:'power3.out'});
+  // parallax backgrounds (scrub = reversible with wheel)
+  document.querySelectorAll('[data-parallax]').forEach(el=>{
+    gsap.to(el,{yPercent:parseFloat(el.dataset.parallax)*100,ease:'none',
+      scrollTrigger:{trigger:el.parentElement,start:'top bottom',end:'bottom top',scrub:true}});
+  });
+  // today card punch-in
+  gsap.from('#todayCard',{autoAlpha:0,y:60,scale:.96,duration:.9,ease:'power3.out',
+    scrollTrigger:{trigger:'#todayCard',start:'top 82%'}});
+  // pinned horizontal rail
+  const rail=document.getElementById('rail');
+  const getDist=()=>rail.scrollWidth-window.innerWidth;
+  gsap.to(rail,{x:()=> -getDist(),ease:'none',
+    scrollTrigger:{trigger:'#railWrap',start:'top top',end:()=>'+='+getDist(),pin:true,scrub:1,invalidateOnRefresh:true,refreshPriority:5,anticipatePin:1}});
+  // inner image parallax on each panel while rail moves
+  document.querySelectorAll('.panel img').forEach(img=>{
+    gsap.fromTo(img,{xPercent:-6},{xPercent:6,ease:'none',
+      scrollTrigger:{trigger:'#railWrap',start:'top top',end:()=>'+='+getDist(),scrub:1}});
+  });
+  // deal cards cascade
+  gsap.from('.deal',{autoAlpha:0,y:40,duration:.6,stagger:.07,ease:'power2.out',
+    scrollTrigger:{trigger:'#dealGrid',start:'top 85%'}});
+  // steps draw in
+  gsap.from('.step',{autoAlpha:0,y:50,duration:.7,stagger:.15,ease:'power3.out',
+    scrollTrigger:{trigger:'.steps-list',start:'top 82%'}});
+  // city marquees scrub opposite directions
+  document.querySelectorAll('[data-marquee]').forEach(el=>{
+    gsap.to(el,{xPercent:12*parseFloat(el.dataset.marquee),ease:'none',
+      scrollTrigger:{trigger:'.cities',start:'top bottom',end:'bottom top',scrub:true}});
+  });
+  // counters
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const end=+el.dataset.count,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+    const obj={v:0};
+    gsap.to(obj,{v:end,duration:1.4,ease:'power1.out',
+      scrollTrigger:{trigger:el,start:'top 88%'},
+      onUpdate:()=>el.textContent=pre+Math.round(obj.v)+suf});
+  });
+  // ---- hero film montage: plays on its own, chapter label updates, scroll nudges the cut ----
+  const CHAPTERS=[
+    {v:'fv1',kick:'THE GROW',label:'Grown right'},
+    {v:'fv2',kick:'THE PACK',label:'Packed fresh'},
+    {v:'fv3',kick:'THE RUN',label:'On the way in minutes'},
+    {v:'fv4',kick:'THE DROP',label:'30 min. At your door.'}
+  ];
+  const vids=CHAPTERS.map(c=>document.getElementById(c.v));
+  const hcKick=document.getElementById('hcKick'), hcText=document.getElementById('hcText');
+  let curCh=-1, autoTimer=null;
+  function setChapter(idx){
+    idx=(idx+CHAPTERS.length)%CHAPTERS.length;
+    if(idx===curCh) return;
+    curCh=idx;
+    vids.forEach((v,i)=>{
+      const on=i===idx;
+      v.classList.toggle('active',on);
+      if(on){ if(v.readyState<2) v.load(); v.currentTime=0; v.play().catch(()=>{}); }
+      else v.pause();
+    });
+    if(hcKick){ hcKick.textContent=CHAPTERS[idx].kick; hcText.textContent=CHAPTERS[idx].label;
+      gsap.fromTo('.hero-chapter',{autoAlpha:.4,y:6},{autoAlpha:1,y:0,duration:.5,ease:'power2.out'}); }
+  }
+  function armAuto(){
+    clearInterval(autoTimer);
+    autoTimer=setInterval(()=>setChapter(curCh+1),4600);
+  }
+  setChapter(0); armAuto();
+  vids.forEach(v=>{v.loop=true;});
+  // watchdog: hero video must never freeze while hero is on screen
+  let heroVisible=true;
+  new IntersectionObserver(es=>{heroVisible=es[0].isIntersecting;},{threshold:.2}).observe(document.querySelector('.hero'));
+  setInterval(()=>{
+    if(!heroVisible||curCh<0) return;
+    const v=vids[curCh];
+    if(v && v.paused){ v.play().catch(()=>{}); }
+  },400);
+  // subtle scroll depth: hero content drifts up and film darkens slightly as you leave
+  gsap.to('.hero-film',{yPercent:10,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+  gsap.to('.hero-content',{yPercent:-14,autoAlpha:.25,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom 35%',scrub:true}});
+
+  // final section rise
+  gsap.from('.final .reveal',{autoAlpha:0,y:36,duration:.8,stagger:.1,ease:'power3.out',
+    scrollTrigger:{trigger:'.final',start:'top 75%'}});
+  // keep pin layout honest once videos/fonts finish loading
+  let loadedCount=0;
+  vids.forEach(v=>v.addEventListener('loadedmetadata',()=>{if(++loadedCount===vids.length)ScrollTrigger.refresh();}));
+  addEventListener('load',()=>ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>
